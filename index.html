@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Servo WPT CSS scores</title>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            google.charts.load('current', {packages: ['corechart', 'line']});
+            google.charts.setOnLoadCallback(drawBasic);
+
+            function drawBasic() {
+                let data = new google.visualization.DataTable();
+                data.addColumn('datetime', 'X');
+                data.addColumn('number', 'Scores');
+
+                data.addRows([
+                    [new Date(2023, 00, 01), 0],
+                    [new Date(2023, 00, 02), 0.10],
+                    [new Date(2023, 00, 03), 0.8],
+                    [new Date(2023, 00, 04), 0.18],
+                    [new Date(2023, 00, 05), 0.70],
+                    [new Date(2023, 00, 06), 0.92],
+                    [new Date(2023, 00, 07), 0.75],
+                    [new Date(2023, 00, 08), 0.65],
+                    [new Date(2023, 00, 09), 0.75],
+                    [new Date(2023, 00, 10), 0.75],
+                    [new Date(2023, 00, 11), 0.85],
+                    [new Date(2023, 00, 12), 0.75],
+                    [new Date(2023, 00, 13), 0.75],
+                    [new Date(2023, 00, 14), 0.75],
+                    [new Date(2023, 00, 15), 0.35],
+                    [new Date(2023, 00, 16), 0.73],
+                    [new Date(2023, 00, 17), 0.75],
+                    [new Date(2023, 00, 18), 0.75],
+                    [new Date(2023, 00, 19), 0.75],
+                    [new Date(2023, 00, 20), 0.79],
+                    [new Date(2023, 00, 21), 0.75],
+                    [new Date(2023, 00, 22), 0.75],
+                    [new Date(2023, 00, 23), 0.75],
+                    [new Date(2023, 00, 24), 0.76],
+                    [new Date(2023, 00, 25), 0.75],
+                    [new Date(2023, 00, 26), 0.75],
+                    [new Date(2023, 00, 27), 0.75],
+                    [new Date(2023, 00, 28), 0.76],
+                    [new Date(2023, 00, 29), 0.75],
+                    [new Date(2023, 00, 30), 0.72],
+                    [new Date(2023, 00, 31), 0.73],
+                ]);
+
+                let endOfYear = new Date(2023, 11, 31)
+                let maxDate = new Date()
+                if (maxDate > endOfYear) {
+                    maxDate = endOfYear
+                }
+
+                let options = {
+                    height: 350,
+                    fontSize: 14,
+                    tooltip: {
+                        trigger: 'both',
+                    },
+                    hAxis: {
+                        title: 'Date',
+                        format: 'MMM-YYYY',
+                        viewWindow: {
+                            max: maxDate
+                        }
+                    },
+                    vAxis: {
+                        title: `WPT Score`,
+                        format: 'percent',
+                        viewWindow: {
+                            min: 0,
+                            max: 1,
+                        }
+                    },
+                    explorer: {
+                        actions: ['dragToZoom', 'rightClickToReset'],
+                        axis: 'horizontal',
+                        keepInBounds: true,
+                        maxZoomIn: 4.0,
+                    },
+                };
+
+
+
+                var chart = new google.visualization.LineChart(document.getElementById('servo-chart'));
+
+                chart.draw(data, options);
+            }
+        </script>
+    </head>
+    <body>
+        <div id="servo-chart"></div>
+    </body>
+</html>
