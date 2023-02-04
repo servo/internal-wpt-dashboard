@@ -1,0 +1,22 @@
+{
+  "name": "servo-internal-wpt-dashboard",
+  "version": "1.0.0",
+  "description": "A simple wpt.fyi like dashboard to track progress of WPT scores for Servo's focus areas.",
+  "type": "module",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mukilan/servo-internal-wpt-dashboard.git"
+  },
+  "author": "",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mukilan/servo-internal-wpt-dashboard/issues"
+  },
+  "homepage": "https://github.com/mukilan/servo-internal-wpt-dashboard#readme",
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  }
+}
