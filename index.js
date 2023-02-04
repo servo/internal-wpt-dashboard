@@ -30,7 +30,7 @@ async function main() {
     scores.push([date, score, run.run_info.revision.substring(0, 6)])
   }
 
-  writeJsonFile('./scores.json', { scores })
+  writeJsonFile('./site/scores.json', { scores })
 }
 
 main()
