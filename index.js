@@ -1,5 +1,5 @@
 import { opendir, readFile, writeFile } from 'node:fs/promises'
-import { process_raw_results, score_run } from './process-wpt-results.js'
+import { merge_nonoverlap, process_raw_results, score_run } from './process-wpt-results.js'
 
 async function read_json_file (path) {
     const contents = await readFile(path, {
@@ -25,6 +25,21 @@ async function find_latest_run () {
     return await read_json_file(`./runs/${runs[runs.length - 1]}`)
 }
 
+async function process_chunks(path) {
+    const dir = await opendir(path)
+    let result = {}
+    for await (const chunk of dir) {
+        const chunk_run = await read_json_file(`${path}/${chunk.name}`)
+        const scored_chunk = process_raw_results(chunk_run)
+        if (!result.run_info) {
+            result.run_info = scored_chunk.run_info
+        }
+        delete scored_chunk.run_info
+        result = merge_nonoverlap(result, scored_chunk)
+    }
+    return result
+
+}
 async function main () {
     const mode = process.argv[2]
     if (!['--add', '--recalc'].includes(mode)) {
@@ -33,16 +48,16 @@ async function main () {
 
     let new_run
     if (mode === '--add') {
-        const filename = process.argv[3]
+        const chunks_path = process.argv[3]
         const date = process.argv[4]
+
         const matches = process.argv[5].match(/Servo ([0-9.]+-[a-f0-9]+)?(-dirty)?$/)
         let servo_version = 'Unknown'
         if (matches) {
             servo_version = matches[1]
         }
 
-        const results = await read_json_file(filename)
-        new_run = process_raw_results(results)
+        new_run = await process_chunks(chunks_path)
         new_run.run_info.browser_version = servo_version
         await write_json_file(`./runs/${date}.json`, new_run)
     } else if (mode === '--recalc') {

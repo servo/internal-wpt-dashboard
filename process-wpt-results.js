@@ -1,3 +1,41 @@
+import { default as assert } from 'node:assert/strict'
+
+function is_object(val) {
+    return (
+        typeof val === "object" && val !== null && val !== undefined
+    )
+}
+
+export function merge_nonoverlap(obj1, obj2) {
+    function checkNoArray(obj) {
+        for (const [k,v] of Object.entries(obj)) {
+            assert(!Array.isArray(v), `Key ${k} - arrays can't be merged`)
+            if (is_object(v)) {
+                checkNoArray(v)
+            }
+        }
+        return obj
+    }
+
+    checkNoArray(obj1)
+    const result = obj1
+    for (const [k,v] of Object.entries(obj2)) {
+        if (is_object(v)) {
+            if (result[k] === undefined) {
+                result[k] = checkNoArray(v)
+            } else {
+                assert(is_object(result[k]), `Key ${k} is not an object`)
+                result[k] = merge_nonoverlap(obj1[k], v)
+            }
+        } else {
+            assert(!Array.isArray(v), `Key ${k} - arrays can't be merged`)
+            assert(!(k in obj1), `Key ${k} overlaps`)
+            result[k] = v
+        }
+    }
+    return result
+}
+
 export function process_raw_results (raw_results) {
     const test_scores = {}
     const run_info = raw_results.run_info

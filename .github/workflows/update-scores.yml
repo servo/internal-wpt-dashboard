@@ -24,10 +24,10 @@ jobs:
     name: Nightly Job for WPT trend dashboard
     runs-on: ubuntu-20.04
     env:
-      max_chunk_id: 2
+      max_chunk_id: 20
     strategy:
       matrix:
-        chunk_id: [1, 2]
+        chunk_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     steps:
       - name: Checkout servo repo
         uses: actions/checkout@v3
@@ -57,7 +57,7 @@ jobs:
         working-directory: servo
       - name: Run tests
         run: |
-          python3 ./mach test-wpt --release ${FOCUS_AREAS_TEST} \
+          python3 ./mach test-wpt --release \
             --release --log-wptreport=wpt-report-${{ matrix.chunk_id }}.json \
             --processes $(nproc) --timeout-multiplier 2 \
             --always-succeed \
