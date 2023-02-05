@@ -14,7 +14,7 @@ env:
   RUST_BACKTRACE: 1
   SHELL: /bin/bash
   FOCUS_AREAS: css/CSS2/abspos css/CSS2/box-display css/CSS2/floats css/CSS2/floats-clear css/CSS2/linebox css/CSS2/margin-padding-clear css/CSS2/normal-flow css/CSS2/positioning
-  FOCUS_AREAST_TEST: css/CSS2/abspos
+  FOCUS_AREAS_TEST: css/CSS2/abspos
 
 jobs:
   nightly-dashboard-job:
@@ -38,6 +38,9 @@ jobs:
           mkdir -p target/release
           mv servo/resources resources
           mv servo/servo target/release/servo
+          export SERVO_VERSION=$(./target/release/servo --version)
+          echo Downloade $SERVO_VERSION
+          echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
         working-directory: servo
       - name: Prep test environment
         run: |
@@ -50,7 +53,7 @@ jobs:
         working-directory: servo
       - name: Run tests
         run: |
-          python3 ./mach test-wpt --release ${FOCUS_AREAST_TEST} \
+          python3 ./mach test-wpt --release ${FOCUS_AREAS_TEST} \
             --release --log-wptreport=wpt-report.json \
             --processes $(nproc) --timeout-multiplier 2 \
             --always-succeed
@@ -61,12 +64,12 @@ jobs:
           echo $CURRENT_DATE
           echo "CURRENT_DATE=$CURRENT_DATE" >> $GITHUB_ENV
           mkdir -p runs
-          node index.js ../servo/wpt-report.json "${CURRENT_DATE}"
+          node index.js --add ../servo/wpt-report.json "$CURRENT_DATE" "$SERVO_VERSION"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add runs/${CURRENT_DATE}.json
           git add site/scores.json
-          git commit -m "Adding results for ${CURRENT_DATE}"
+          git commit -m "Add run for $CURRENT_DATE"
           git push
         working-directory: wpt-dashboard
       - name: Setup Pages
