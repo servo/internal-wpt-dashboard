@@ -17,18 +17,18 @@ env:
   RUST_BACKTRACE: 1
   SHELL: /bin/bash
   FOCUS_AREAS: css/CSS2/abspos css/CSS2/box-display css/CSS2/floats css/CSS2/floats-clear css/CSS2/linebox css/CSS2/margin-padding-clear css/CSS2/normal-flow css/CSS2/positioning
-  FOCUS_AREAS_TEST: css/CSS2/abspos
+  FOCUS_AREAS_TEST: css/CSS2/abspos css/CSS2/box-display css/CSS2/floats
 
 jobs:
   nightly-dashboard-job:
     name: Nightly Job for WPT trend dashboard
     runs-on: ubuntu-20.04
+    env:
+      max_chunk_id: 2
+    strategy:
+      matrix:
+        chunk_id: [1, 2]
     steps:
-      - name: Checkout dashboard repo
-        uses: actions/checkout@v3
-        with:
-          ref: dev
-          path: wpt-dashboard
       - name: Checkout servo repo
         uses: actions/checkout@v3
         with:
@@ -58,30 +58,54 @@ jobs:
       - name: Run tests
         run: |
           python3 ./mach test-wpt --release ${FOCUS_AREAS_TEST} \
-            --release --log-wptreport=wpt-report.json \
+            --release --log-wptreport=wpt-report-${{ matrix.chunk_id }}.json \
             --processes $(nproc) --timeout-multiplier 2 \
-            --always-succeed
+            --always-succeed \
+            --this-chunk ${{ matrix.chunk_id }} \
+            --total-chunks ${{ env.max_chunk_id }}
         working-directory: servo
-      - name: Process new test result
+      - name: Archive the chunk result
+        uses: actions/upload-artifact@v3
+        with:
+          name: wpt-chunks
+          path: servo/wpt-report-${{ matrix.chunk_id }}.json
+
+  process-new-run:
+    name: Process all chunks and update metrics
+    runs-on: ubuntu-20.04
+    needs:
+      - 'nightly-dashboard-job'
+    steps:
+      - name: Checkout dashboard repo
+        uses: actions/checkout@v3
+        with:
+          ref: dev
+      - name: Download artifact with all chunks
+        uses: actions/download-artifact@v3
+        with:
+          name: wpt-chunks
+          path: wpt-chunks
+      - name: Process new test results
         run: |
+          ls -l
+          ls -l wpt-chunks
           export CURRENT_DATE=$(date +"%Y-%m-%d")
           echo $CURRENT_DATE
           echo "CURRENT_DATE=$CURRENT_DATE" >> $GITHUB_ENV
           mkdir -p runs
-          node index.js --add ../servo/wpt-report.json "$CURRENT_DATE" "$SERVO_VERSION"
+          node index.js --add wpt-chunks "$CURRENT_DATE" "$SERVO_VERSION"
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add runs/${CURRENT_DATE}.json
           git add site/scores.json
           git commit -m "Add run for $CURRENT_DATE"
           git push
-        working-directory: wpt-dashboard
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: 'wpt-dashboard/site'
+          path: 'site'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
