@@ -1,6 +1,9 @@
 name: Nightly job to update internal WPT dashboard
 
 on:
+  # Run an hour after rust nightly job
+  schedule:
+    - cron: '30 6 * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   push:
@@ -31,17 +34,6 @@ jobs:
         with:
           repository: servo/servo
           path: servo
-      - name: Download latest nightly
-        run: |
-          wget https://download.servo.org/nightly/linux/servo-latest.tar.gz
-          tar -xzf servo-latest.tar.gz
-          mkdir -p target/release
-          mv servo/resources resources
-          mv servo/servo target/release/servo
-          export SERVO_VERSION=$(./target/release/servo --version)
-          echo Downloade $SERVO_VERSION
-          echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
-        working-directory: servo
       - name: Prep test environment
         run: |
           python3 -m pip install --upgrade pip virtualenv
@@ -50,6 +42,17 @@ jobs:
           wget http://mirrors.kernel.org/ubuntu/pool/main/libf/libffi/libffi6_3.2.1-8_amd64.deb
           sudo apt install ./libffi6_3.2.1-8_amd64.deb
           python3 ./mach bootstrap-gstreamer
+        working-directory: servo
+      - name: Download latest nightly
+        run: |
+          wget https://download.servo.org/nightly/linux/servo-latest.tar.gz
+          tar -xzf servo-latest.tar.gz
+          mkdir -p target/release
+          mv servo/resources resources
+          mv servo/servo target/release/servo
+          export SERVO_VERSION=$(./target/release/servo --version)
+          echo Downloaded $SERVO_VERSION
+          echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
         working-directory: servo
       - name: Run tests
         run: |
