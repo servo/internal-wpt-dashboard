@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mukilan/servo-internal-wpt-dashboard.git"
+    "url": "git+https://github.com/servo/internal-wpt-dashboard.git"
   },
-  "author": "",
+  "author": "The Servo developers",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/mukilan/servo-internal-wpt-dashboard/issues"
+    "url": "https://github.com/servo/internal-wpt-dashboard/issues"
   },
-  "homepage": "https://github.com/mukilan/servo-internal-wpt-dashboard#readme",
+  "homepage": "https://github.com/servo/internal-wpt-dashboard#readme",
   "devDependencies": {
     "eslint": "^8.33.0",
     "eslint-config-standard": "^17.0.0",
