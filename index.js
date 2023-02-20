@@ -1,6 +1,12 @@
 import { opendir, readFile, writeFile } from 'node:fs/promises'
-import { merge_nonoverlap, process_raw_results, score_run } from './process-wpt-results.js'
 import { compress, decompress } from 'lzma-native'
+import {
+    merge_nonoverlap,
+    process_raw_results,
+    score_run,
+    focus_areas_map,
+    get_focus_areas
+} from './process-wpt-results.js'
 
 async function read_json_file (path) {
     const contents = await readFile(path, {
@@ -52,6 +58,7 @@ async function process_chunks (path) {
     return result
 
 }
+
 async function main () {
     const mode = process.argv[2]
     if (!['--add', '--recalc'].includes(mode)) {
@@ -79,21 +86,24 @@ async function main () {
 
     const scores = []
     const runs = await all_runs_sorted()
+    const test_to_areas = focus_areas_map(new_run)
+    const { area_keys, area_names: focus_areas } = get_focus_areas()
     for (const r of runs) {
         const [date] = r.split('.')
         const run = await read_compressed(`./runs/${r}`)
-        const score = score_run(run, new_run)
+        const score = score_run(run, new_run, test_to_areas)
         const row = [
             date,
-            score,
             run.run_info.revision.substring(0, 6),
             run.run_info.browser_version
         ]
 
+        for (const area of area_keys) {
+            row.push(score[area])
+        }
         scores.push(row)
     }
 
-    write_json_file('./site/scores.json', { scores })
+    write_json_file('./site/scores.json', { area_keys, focus_areas, scores })
 }
-
 main()
