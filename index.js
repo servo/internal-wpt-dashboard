@@ -50,13 +50,16 @@ async function process_chunks (path) {
         const chunk_run = await read_json_file(`${path}/${chunk.name}`)
         const scored_chunk = process_raw_results(chunk_run)
         if (!result.run_info) {
-            result.run_info = scored_chunk.run_info
+            const raw_run_info = scored_chunk.run_info
+            const matches = raw_run_info
+                .browser_version.match(/^Servo ([0-9.]+-[a-f0-9]+)?(-dirty)?$/)
+            const browser_version = matches.length === 3 ? matches[1] : 'Unknown'
+            result.run_info = Object.assign(raw_run_info, { browser_version })
         }
         delete scored_chunk.run_info
         result = merge_nonoverlap(result, scored_chunk)
     }
     return result
-
 }
 
 async function main () {
@@ -70,14 +73,7 @@ async function main () {
         const chunks_path = process.argv[3]
         const date = process.argv[4]
 
-        const matches = process.argv[5].match(/Servo ([0-9.]+-[a-f0-9]+)?(-dirty)?$/)
-        let servo_version = 'Unknown'
-        if (matches) {
-            servo_version = matches[1]
-        }
-
         new_run = await process_chunks(chunks_path)
-        new_run.run_info.browser_version = servo_version
         await write_compressed(`./runs/${date}.xz`, new_run)
     } else if (mode === '--recalc') {
         const all_runs = await all_runs_sorted()

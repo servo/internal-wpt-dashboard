@@ -6,7 +6,6 @@ on:
     - cron: '30 6 * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  push:
 
 permissions:
   contents: write
@@ -16,8 +15,6 @@ permissions:
 env:
   RUST_BACKTRACE: 1
   SHELL: /bin/bash
-  FOCUS_AREAS: css/CSS2/abspos css/CSS2/box-display css/CSS2/floats css/CSS2/floats-clear css/CSS2/linebox css/CSS2/margin-padding-clear css/CSS2/normal-flow css/CSS2/positioning
-  FOCUS_AREAS_TEST: css/CSS2/abspos css/CSS2/box-display css/CSS2/floats
 
 jobs:
   nightly-dashboard-job:
@@ -27,7 +24,7 @@ jobs:
       max_chunk_id: 20
     strategy:
       matrix:
-        chunk_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        chunk_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     steps:
       - name: Checkout servo repo
         uses: actions/checkout@v3
@@ -51,20 +48,21 @@ jobs:
           mv servo/resources target/release/resources
           mv servo/servo target/release/servo
 
-          export SERVO_VERSION=$(./target/release/servo --version)
+          SERVO_VERSION=$(./target/release/servo --version)
           echo Downloaded $SERVO_VERSION
           echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
         working-directory: servo
       - name: Run tests
         run: |
-          python3 ./mach test-wpt --release \
+          python3 ./mach test-wpt --release css/CSS2/borders css/CSS2/normal-flow \
             --release --log-wptreport=wpt-report-${{ matrix.chunk_id }}.json \
             --processes $(nproc) --timeout-multiplier 2 \
             --always-succeed \
+            --browser-version "$SERVO_VERSION" \
             --this-chunk ${{ matrix.chunk_id }} \
             --total-chunks ${{ env.max_chunk_id }}
         working-directory: servo
-      - name: Archive the chunk result
+      - name: Archive the wpt result chunk
         uses: actions/upload-artifact@v3
         with:
           name: wpt-chunks
@@ -79,25 +77,24 @@ jobs:
       - name: Checkout dashboard repo
         uses: actions/checkout@v3
         with:
-          ref: dev
+          ref: main
       - name: Download artifact with all chunks
         uses: actions/download-artifact@v3
         with:
           name: wpt-chunks
           path: wpt-chunks
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
       - name: Process new test results
         run: |
-          ls -l
-          ls -l wpt-chunks
-          export CURRENT_DATE=$(date +"%Y-%m-%d")
-          echo $CURRENT_DATE
-          echo "CURRENT_DATE=$CURRENT_DATE" >> $GITHUB_ENV
+          CURRENT_DATE=$(date +"%Y-%m-%d")
           mkdir -p runs
-          node index.js --add wpt-chunks "$CURRENT_DATE" "$SERVO_VERSION"
+          node index.js --add wpt-chunks "$CURRENT_DATE"
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add runs/${CURRENT_DATE}.json
-          git add site/scores.json
+          git add runs/${CURRENT_DATE}.xz
           git commit -m "Add run for $CURRENT_DATE"
           git push
       - name: Setup Pages
