@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Servo WPT CSS scores</title>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript" src="load-chart.js"></script>
+        <link rel="stylesheet" href="simple-grid.min.css" />
+        <style>
+            body {
+                font-size: 26px;
+            }
+            #selected-area {
+                padding: 10px;
+            }
+
+            .odd {
+                background-color: #f0efef;
+            }
+
+            #score-table {
+                margin-top: 30px;
+            }
+
+            #score-table th {
+                border-bottom: 1px solid black;
+                text-transform: uppercase;
+            }
+
+            #score-table th, td {
+                padding: 5px 10px;
+            }
+
+            #score-table th:nth-child(1) {
+                text-align: left;
+            }
+
+            #score-table-body tr > td:nth-child(2) {
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <img id="logo" height="100"
+                                   src="https://servo.org/img/servo-color-positive.png">
+                    </img>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <label for="selected-area">Focus area:&nbsp;</label>
+                    <select id="selected-area" name="selected-area"></select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div id="servo-chart"></div>
+            <div class="row">
+                <div class="col-2"></div>
+                <table class="col-8" id="score-table">
+                    <thead>
+                        <tr><th>Focus Area</th><th>Score</th></tr>
+                    </thead>
+                    <tbody id="score-table-body">
+                    </tbody>
+                </table>
+                <div class="col-2"></div>
+            </div>
+        </div>
+    </body>
+</html>
