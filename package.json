@@ -24,5 +24,8 @@
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.2.0"
+  },
+  "dependencies": {
+    "lzma-native": "^8.0.6"
   }
 }

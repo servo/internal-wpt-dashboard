@@ -1,14 +1,14 @@
-import { default as assert } from 'node:assert/strict'
+import assert from 'node:assert/strict'
 
-function is_object(val) {
+function is_object (val) {
     return (
-        typeof val === "object" && val !== null && val !== undefined
+        typeof val === 'object' && val !== null && val !== undefined
     )
 }
 
-export function merge_nonoverlap(obj1, obj2) {
-    function checkNoArray(obj) {
-        for (const [k,v] of Object.entries(obj)) {
+export function merge_nonoverlap (obj1, obj2) {
+    function checkNoArray (obj) {
+        for (const [k, v] of Object.entries(obj)) {
             assert(!Array.isArray(v), `Key ${k} - arrays can't be merged`)
             if (is_object(v)) {
                 checkNoArray(v)
@@ -19,7 +19,7 @@ export function merge_nonoverlap(obj1, obj2) {
 
     checkNoArray(obj1)
     const result = obj1
-    for (const [k,v] of Object.entries(obj2)) {
+    for (const [k, v] of Object.entries(obj2)) {
         if (is_object(v)) {
             if (result[k] === undefined) {
                 result[k] = checkNoArray(v)
