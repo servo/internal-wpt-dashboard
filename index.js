@@ -32,8 +32,8 @@ async function read_compressed (path) {
     return JSON.parse(string)
 }
 
-async function all_runs_sorted () {
-    const dir = await opendir('./runs')
+async function all_runs_sorted (runs_dir) {
+    const dir = await opendir(`./${runs_dir}`)
     const runs = []
     for await (const run of dir) {
         runs.push(run.name)
@@ -62,35 +62,24 @@ async function process_chunks (path) {
     return result
 }
 
-async function main () {
-    const mode = process.argv[2]
-    if (!['--add', '--recalc'].includes(mode)) {
-        throw new Error(`invalid mode specified: ${mode}`)
-    }
+async function add_run (runs_dir, chunks_dir, date) {
+    const new_run = await process_chunks(chunks_dir)
+    await write_compressed(`./${runs_dir}/${date}.xz`, new_run)
+}
 
-    let new_run
-    if (mode === '--add') {
-        const chunks_path = process.argv[3]
-        const date = process.argv[4]
-
-        new_run = await process_chunks(chunks_path)
-        await write_compressed(`./runs/${date}.xz`, new_run)
-    } else if (mode === '--recalc') {
-        const all_runs = await all_runs_sorted()
-        new_run = await read_compressed(`./runs/${all_runs[all_runs.length - 1]}`)
-    }
-
+async function recalc_scores (runs_dir) {
     const scores = []
-    const runs = await all_runs_sorted()
+    const all_runs = await all_runs_sorted(runs_dir)
+    const new_run = await read_compressed(`./${runs_dir}/${all_runs[all_runs.length - 1]}`)
     const test_to_areas = focus_areas_map(new_run)
-    const { area_keys, area_names: focus_areas } = get_focus_areas()
-    for (const r of runs) {
+    const { area_keys } = get_focus_areas()
+    for (const r of all_runs) {
         const [date] = r.split('.')
-        const run = await read_compressed(`./runs/${r}`)
+        const run = await read_compressed(`./${runs_dir}/${r}`)
         const score = score_run(run, new_run, test_to_areas)
         const row = [
             date,
-            run.run_info.revision.substring(0, 6),
+            run.run_info.revision.substring(0, 9),
             run.run_info.browser_version
         ]
 
@@ -100,6 +89,38 @@ async function main () {
         scores.push(row)
     }
 
-    write_json_file('./site/scores.json', { area_keys, focus_areas, scores })
+    return scores
+}
+
+async function main () {
+    const mode = process.argv[2]
+    if (!['--add', '--recalc'].includes(mode)) {
+        throw new Error(`invalid mode specified: ${mode}`)
+    }
+
+    if (mode === '--add') {
+        const chunks_2013 = process.argv[3]
+        const chunks_2020 = process.argv[4]
+        const date = process.argv[5]
+        await add_run('runs', chunks_2013, date)
+        await add_run('runs-2020', chunks_2020, date)
+    }
+
+    const scores_2013 = await recalc_scores('runs')
+    const scores_2020 = await recalc_scores('runs-2020')
+    const scores_by_date = new Map(scores_2020.map(score => [score[0], score]))
+
+    const scores = []
+    for (const score_2013 of scores_2013) {
+        const len = scores.push(score_2013)
+        if (scores_by_date.has(score_2013[0])) {
+            const score_2020 = scores_by_date.get(score_2013[0]).slice(1)
+            scores[len - 1].splice(score_2013.length, 0, ...score_2020)
+        }
+    }
+
+    const { area_keys, area_names: focus_areas } = get_focus_areas()
+    write_json_file(
+        './site/scores.json', { area_keys, focus_areas, scores })
 }
 main()
