@@ -80,7 +80,7 @@ function setupChart () {
         table.addColumn('date', 'runOn')
         table.addColumn('number', 'Layout 2013')
         table.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
-        table.addColumn('number', 'Layout 2022')
+        table.addColumn('number', 'Layout 2020')
         table.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
         for (const s of all_scores.scores) {
             const score_2013 = s[area_index + 3]
