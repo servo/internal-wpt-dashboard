@@ -1,9 +1,9 @@
 name: Nightly job to update internal WPT dashboard
 
 on:
-  # Run an hour after rust nightly job
+  # Run an 2.5 hours after servo nightly job
   schedule:
-    - cron: '30 6 * * *'
+    - cron: '0 8 * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
