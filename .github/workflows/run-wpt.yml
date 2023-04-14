@@ -36,7 +36,7 @@ jobs:
       - name: Download latest nightly
         run: |
           ./mach bootstrap-gstreamer
-          wget ${{ inputs.nightly-path }} 
+          wget -O servo-latest.tar.gz "${{ inputs.nightly-path }}"
           tar -xzf servo-latest.tar.gz
           mkdir -p target/release
           mv servo/resources target/release/resources
