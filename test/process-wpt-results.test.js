@@ -255,16 +255,19 @@ describe('focus areas', () => {
         assert.deepEqual(map, {
             '/css/CSS2/floats-clear/float-replaced-width-004.xht': [
                 'css2',
+                'css',
                 'all',
                 'floats-clear'
             ],
             '/css/CSS2/abspos/static-inside-table-cell.html': [
                 'css2',
+                'css',
                 'all',
                 'abspos'
             ],
             '/css/CSS2/margin-padding-clear/margin-right-078.xht': [
                 'css2',
+                'css',
                 'all',
                 'margin-padding-clear'
             ],
