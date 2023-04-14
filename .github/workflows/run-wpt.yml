@@ -48,8 +48,9 @@ jobs:
         working-directory: servo
       - name: Run tests
         run: |
-          python3 ./mach test-wpt --release \
-            --release --log-wptreport=wpt-report-${{ matrix.chunk_id }}.json \
+          python3 ./mach test-wpt \
+            --release \
+            --log-wptreport=wpt-report-${{ matrix.chunk_id }}.json \
             --processes $(nproc) --timeout-multiplier 2 \
             --always-succeed \
             --browser-version "$SERVO_VERSION" \
