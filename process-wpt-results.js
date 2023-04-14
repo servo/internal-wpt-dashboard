@@ -103,6 +103,21 @@ const FOCUS_AREAS = {
         predicate: regex_predicate(CSS2_FOCUS_REGEXP),
         order: 0
     },
+    cssom: {
+        name: 'CSSOM',
+        predicate: prefix_predicate('/css/cssom/'),
+        order: 96
+    },
+    csspos: {
+        name: 'CSS Position',
+        predicate: prefix_predicate('/css/css-position/'),
+        order: 97
+    },
+    css: {
+        name: 'All CSS tests',
+        predicate: prefix_predicate('/css/'),
+        order: 98
+    },
     all: {
         name: 'All WPT tests',
         predicate: prefix_predicate(''),
