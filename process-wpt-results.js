@@ -106,12 +106,17 @@ const FOCUS_AREAS = {
     cssom: {
         name: 'CSSOM',
         predicate: prefix_predicate('/css/cssom/'),
-        order: 96
+        order: 90
     },
     csspos: {
         name: 'CSS Position',
         predicate: prefix_predicate('/css/css-position/'),
-        order: 97
+        order: 91
+    },
+    cssflex: {
+        name: 'CSS Flexbox',
+        predicate: prefix_predicate('/css/css-flexbox/'),
+        order: 92
     },
     css: {
         name: 'All CSS tests',
