@@ -26,7 +26,7 @@ function toolTip (date, wpt_sha, servo_version, score, engine) {
         <b>${formatDate(date)}</b></br>
         Score: <b>${score / 10}</b></br>
         WPT: ${wpt_sha}</br>
-        Servo (w/ layout ${engine}): ${servo_version}
+        Servo (${engine}): ${servo_version}
     `
 }
 
@@ -78,9 +78,9 @@ function setupChart () {
         const table = new google.visualization.DataTable()
         const stride = all_scores.area_keys.length
         table.addColumn('date', 'runOn')
-        table.addColumn('number', 'Layout 2013')
+        table.addColumn('number', 'Legacy Layout')
         table.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
-        table.addColumn('number', 'Layout 2020')
+        table.addColumn('number', 'Servo Layout')
         table.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
         for (const s of all_scores.scores) {
             const score_2013 = s[area_index + 3]
@@ -89,14 +89,14 @@ function setupChart () {
             const row = [
                 date,
                 score_2013 / 1000,
-                toolTip(date, s[1], s[2], score_2013, '2013')
+                toolTip(date, s[1], s[2], score_2013, 'Legacy Layout')
             ]
             if (score_2020 !== undefined) {
                 const wpt_sha = s[stride + 3]
                 const version = s[stride + 4]
                 row.push(
                     score_2020 / 1000,
-                    toolTip(date, wpt_sha, version, score_2020, '2020')
+                    toolTip(date, wpt_sha, version, score_2020, 'Servo Layout')
                 )
             } else {
                 row.push(undefined, undefined)
