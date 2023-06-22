@@ -37,6 +37,15 @@
             #score-table-body .score {
                 text-align: right;
             }
+
+            label[for="show-legacy"] {
+                font-size: 0.6em;
+            }
+
+            #show-legacy-div {
+                text-align: center;
+                vertical-align: center;
+            }
         </style>
     </head>
     <body>
@@ -60,9 +69,16 @@
             </div>
             <div id="servo-chart"></div>
             <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4" id="show-legacy-div">
+                    <input type="checkbox" name="show-legacy" id="show-legacy"></input>
+                    <label for="show-legacy">Show Legacy Layout</label>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            <div class="row">
                 <table class="col-12" id="score-table">
-                    <thead>
-                        <tr><th>Focus Area</th><th>Layout 2013</th><th>Layout 2020</th></tr>
+                    <thead id="score-table-header">
                     </thead>
                     <tbody id="score-table-body">
                     </tbody>
