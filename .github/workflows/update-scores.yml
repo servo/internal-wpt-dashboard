@@ -20,13 +20,13 @@ jobs:
   wpt-for-layout-2013:
     uses: ./.github/workflows/run-wpt.yml
     with:
-      nightly-path: https://github.com/servo/servo-nightly-builds/releases/latest/download/servo-latest-legacy-layout.tar.gz
+      layout-engine: 2013
       artifact-name: wpt-chunks
 
   wpt-for-layout-2020:
     uses: ./.github/workflows/run-wpt.yml
     with:
-      nightly-path: https://download.servo.org/nightly/linux/servo-latest.tar.gz
+      layout-engine: 2020
       artifact-name: wpt-chunks-2020
 
   process-new-run:
