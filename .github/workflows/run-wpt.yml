@@ -1,9 +1,12 @@
 name: Reusable workflow to execute WPT against Servo nightly.
 
+env:
+  NIGHTLY_PATH: https://download.servo.org/nightly/linux/servo-latest.tar.gz
+
 on:
   workflow_call:
     inputs:
-      nightly-path:
+      layout-engine:
         required: true
         type: string
       artifact-name:
@@ -36,7 +39,7 @@ jobs:
       - name: Download latest nightly
         run: |
           ./mach bootstrap-gstreamer
-          wget -O servo-latest.tar.gz "${{ inputs.nightly-path }}"
+          wget -O servo-latest.tar.gz "${{ env.NIGHTLY_PATH }}"
           tar -xzf servo-latest.tar.gz
           mkdir -p target/release
           mv servo/resources target/release/resources
@@ -45,6 +48,10 @@ jobs:
           SERVO_VERSION=$(./target/release/servo --version)
           echo Downloaded $SERVO_VERSION
           echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
+        working-directory: servo
+      - name: Override include.ini
+        if: ${{ inputs.layout-engine == '2020' }}
+        run: cp tests/wpt/include-legacy-layout.ini tests/wpt/include.ini
         working-directory: servo
       - name: Run tests
         run: |
@@ -55,7 +62,8 @@ jobs:
             --always-succeed \
             --browser-version "$SERVO_VERSION" \
             --this-chunk ${{ matrix.chunk_id }} \
-            --total-chunks ${{ env.max_chunk_id }}
+            --total-chunks ${{ env.max_chunk_id }} \
+            --layout-${{ inputs.layout-engine }}
         working-directory: servo
       - name: Archive the wpt result chunk
         uses: actions/upload-artifact@v3
