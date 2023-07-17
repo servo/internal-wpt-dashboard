@@ -4,6 +4,11 @@ google.charts.load('current', { packages: ['corechart', 'line'] })
 google.charts.setOnLoadCallback(setupChart)
 
 const fetchData = fetch('scores.json')
+const embed = location.search == "?embed"
+
+if (embed) {
+    document.documentElement.classList.add("embed")
+}
 
 function formatDate (date) {
     const months = [
@@ -40,19 +45,30 @@ function setupChart () {
     const options = {
         height: 350,
         fontSize: 16,
-        legend: { position: 'top' },
+        legend: {
+            position: 'top',
+            ...(embed ? {
+                textStyle: { color: '#f5f5f5' }
+            } : {})
+        },
         hAxis: {
             format: 'MMM-YYYY',
             viewWindow: {
                 max: maxDate
-            }
+            },
+            ...(embed ? {
+                textStyle: { color: '#f5f5f5' }
+            } : {})
         },
         vAxis: {
             format: 'percent',
             viewWindow: {
                 min: 0,
                 max: 1
-            }
+            },
+            ...(embed ? {
+                textStyle: { color: '#f5f5f5' }
+            } : {})
         },
         explorer: {
             actions: ['dragToZoom', 'rightClickToReset'],
@@ -61,9 +77,13 @@ function setupChart () {
             maxZoomIn: 4.0
         },
         tooltip: {
+            // textStyle has no effect if isHtml is true
             isHtml: true,
             trigger: 'both'
-        }
+        },
+        ...(embed ? {
+            backgroundColor: '#121619'
+        } : {})
     }
 
     const node = document.getElementById('servo-chart')
