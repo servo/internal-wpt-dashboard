@@ -4,10 +4,10 @@ google.charts.load('current', { packages: ['corechart', 'line'] })
 google.charts.setOnLoadCallback(setupChart)
 
 const fetchData = fetch('scores.json')
-const embed = location.search == "?embed"
+const embed = location.search === '?embed'
 
 if (embed) {
-    document.documentElement.classList.add("embed")
+    document.documentElement.classList.add('embed')
 }
 
 function formatDate (date) {
@@ -47,18 +47,22 @@ function setupChart () {
         fontSize: 16,
         legend: {
             position: 'top',
-            ...(embed ? {
-                textStyle: { color: '#f5f5f5' }
-            } : {})
+            ...(embed
+                ? {
+                    textStyle: { color: '#f5f5f5' }
+                }
+                : {})
         },
         hAxis: {
             format: 'MMM-YYYY',
             viewWindow: {
                 max: maxDate
             },
-            ...(embed ? {
-                textStyle: { color: '#f5f5f5' }
-            } : {})
+            ...(embed
+                ? {
+                    textStyle: { color: '#f5f5f5' }
+                }
+                : {})
         },
         vAxis: {
             format: 'percent',
@@ -66,9 +70,11 @@ function setupChart () {
                 min: 0,
                 max: 1
             },
-            ...(embed ? {
-                textStyle: { color: '#f5f5f5' }
-            } : {})
+            ...(embed
+                ? {
+                    textStyle: { color: '#f5f5f5' }
+                }
+                : {})
         },
         explorer: {
             actions: ['dragToZoom', 'rightClickToReset'],
@@ -81,9 +87,11 @@ function setupChart () {
             isHtml: true,
             trigger: 'both'
         },
-        ...(embed ? {
-            backgroundColor: '#121619'
-        } : {})
+        ...(embed
+            ? {
+                backgroundColor: '#121619'
+            }
+            : {})
     }
 
     const node = document.getElementById('servo-chart')
