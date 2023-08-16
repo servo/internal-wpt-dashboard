@@ -49,10 +49,6 @@ jobs:
           echo Downloaded $SERVO_VERSION
           echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
         working-directory: servo
-      - name: Override include.ini
-        if: ${{ inputs.layout-engine == '2020' }}
-        run: cp tests/wpt/include-legacy-layout.ini tests/wpt/include.ini
-        working-directory: servo
       - name: Run tests
         run: |
           python3 ./mach test-wpt \
