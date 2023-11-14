@@ -31,7 +31,7 @@ jobs:
 
   process-new-run:
     name: Process all chunks and update metrics
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
       - wpt-for-layout-2013
       - wpt-for-layout-2020
