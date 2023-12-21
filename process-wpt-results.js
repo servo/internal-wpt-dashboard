@@ -118,6 +118,11 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/css/css-flexbox/'),
         order: 92
     },
+    csstext: {
+        name: 'CSS Text',
+        predicate: prefix_predicate('/css/css-text/'),
+        order: 92
+    },
     css: {
         name: 'All CSS tests',
         predicate: prefix_predicate('/css/'),
