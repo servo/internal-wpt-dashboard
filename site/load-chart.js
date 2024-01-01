@@ -36,7 +36,7 @@ function toolTip (date, wpt_sha, servo_version, score, engine) {
 }
 
 function setupChart () {
-    const endOfYear = new Date(2023, 11, 31)
+    const endOfYear = new Date(2024, 11, 31)
     let maxDate = new Date()
     if (maxDate > endOfYear) {
         maxDate = endOfYear
