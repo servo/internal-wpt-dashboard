@@ -97,9 +97,7 @@ const CSS2_FOCUS_REGEXP = new RegExp(
     `^/css/CSS2/(${CSS2_FOCUS_FOLDERS.join('|')})/`
 )
 
-const CSS_TABLES_PREDICATE = new RegExp(
-    `^/css/(CSS2/tables|css-tables)/`
-)
+const CSS_TABLES_PREDICATE = /^\/css\/(CSS2\/tables|css-tables)\//
 
 const FOCUS_AREAS = {
     css2: {
