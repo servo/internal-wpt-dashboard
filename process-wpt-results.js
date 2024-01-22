@@ -121,7 +121,7 @@ const FOCUS_AREAS = {
         order: 92
     },
     csstable: {
-        name: "/css/CSS2/tables & /css/css-tables",
+        name: '/css/CSS2/tables & /css/css-tables',
         predicate: regex_predicate(CSS_TABLES_PREDICATE),
         order: 93
     },
