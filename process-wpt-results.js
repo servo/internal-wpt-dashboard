@@ -97,34 +97,43 @@ const CSS2_FOCUS_REGEXP = new RegExp(
     `^/css/CSS2/(${CSS2_FOCUS_FOLDERS.join('|')})/`
 )
 
+const CSS_TABLES_PREDICATE = new RegExp(
+    `^/css/(CSS2/tables|css-tables)/`
+)
+
 const FOCUS_AREAS = {
     css2: {
-        name: 'CSS2 focus folders',
+        name: 'Focus Areas',
         predicate: regex_predicate(CSS2_FOCUS_REGEXP),
         order: 0
     },
     cssom: {
-        name: 'CSSOM',
+        name: '/css/cssom',
         predicate: prefix_predicate('/css/cssom/'),
         order: 90
     },
     csspos: {
-        name: 'CSS Position',
+        name: '/css/css-position',
         predicate: prefix_predicate('/css/css-position/'),
         order: 91
     },
     cssflex: {
-        name: 'CSS Flexbox',
+        name: '/css/css-flexbox',
         predicate: prefix_predicate('/css/css-flexbox/'),
         order: 92
     },
+    csstable: {
+        name: "/css/CSS2/tables & /css/css-tables",
+        predicate: regex_predicate(CSS_TABLES_PREDICATE),
+        order: 93
+    },
     csstext: {
-        name: 'CSS Text',
+        name: '/css/csstext',
         predicate: prefix_predicate('/css/css-text/'),
-        order: 92
+        order: 94
     },
     css: {
-        name: 'All CSS tests',
+        name: '/css',
         predicate: prefix_predicate('/css/'),
         order: 98
     },
