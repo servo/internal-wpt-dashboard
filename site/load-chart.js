@@ -167,7 +167,7 @@ function setupChart () {
             .insertAdjacentHTML(
                 'beforeend',
                 `<tr>
-                    <th>Focus Area</th>
+                    <th>Test Suite</th>
                     ${legacy('<th>Legacy Layout</th>')}
                     <th>Servo Layout</th>
                 </tr>`
