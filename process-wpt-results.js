@@ -125,8 +125,8 @@ const FOCUS_AREAS = {
         predicate: regex_predicate(CSS_TABLES_PREDICATE),
         order: 93
     },
-    csstext: {
-        name: '/css/csstext',
+    css-text: {
+        name: '/css/css-text',
         predicate: prefix_predicate('/css/css-text/'),
         order: 94
     },
