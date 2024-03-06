@@ -126,7 +126,7 @@ const FOCUS_AREAS = {
         order: 93
     },
     csstext: {
-        name: '/css/csstext',
+        name: '/css/css-text',
         predicate: prefix_predicate('/css/css-text/'),
         order: 94
     },
