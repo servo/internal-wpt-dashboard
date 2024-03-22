@@ -211,7 +211,7 @@ function setupChart () {
 
             area_dropdown.onchange = update
             show_legacy.onchange = update
-            area_dropdown.value = scores.area_keys[0]
+            area_dropdown.value = scores.area_keys[1]
             update()
         })
 }

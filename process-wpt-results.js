@@ -93,61 +93,57 @@ const CSS2_FOCUS_FOLDERS = [
     'positioning'
 ]
 
-const CSS2_FOCUS_REGEXP = new RegExp(
-    `^/css/CSS2/(${CSS2_FOCUS_FOLDERS.join('|')})/`
-)
-
 const CSS_TABLES_PREDICATE = /^\/css\/(CSS2\/tables|css-tables)\//
 
 const FOCUS_AREAS = {
-    css2: {
-        name: 'Focus Areas',
-        predicate: regex_predicate(CSS2_FOCUS_REGEXP),
+    all: {
+        name: 'All WPT tests',
+        predicate: prefix_predicate(''),
         order: 0
     },
-    cssom: {
-        name: '/css/cssom',
-        predicate: prefix_predicate('/css/cssom/'),
-        order: 90
+    css: {
+        name: '/css',
+        predicate: prefix_predicate('/css/'),
+        order: 1
     },
-    csspos: {
-        name: '/css/css-position',
-        predicate: prefix_predicate('/css/css-position/'),
-        order: 91
-    },
-    cssflex: {
-        name: '/css/css-flexbox',
-        predicate: prefix_predicate('/css/css-flexbox/'),
-        order: 92
+    css2: {
+        name: '/css/CSS2',
+        predicate: prefix_predicate('/css/CSS2/'),
+        order: 2
     },
     csstable: {
         name: '/css/CSS2/tables & /css/css-tables',
         predicate: regex_predicate(CSS_TABLES_PREDICATE),
+        order: 90
+    },
+    cssom: {
+        name: '/css/cssom',
+        predicate: prefix_predicate('/css/cssom/'),
+        order: 91
+    },
+    csspos: {
+        name: '/css/css-position',
+        predicate: prefix_predicate('/css/css-position/'),
+        order: 92
+    },
+    cssflex: {
+        name: '/css/css-flexbox',
+        predicate: prefix_predicate('/css/css-flexbox/'),
         order: 93
     },
     csstext: {
         name: '/css/css-text',
         predicate: prefix_predicate('/css/css-text/'),
         order: 94
-    },
-    css: {
-        name: '/css',
-        predicate: prefix_predicate('/css/'),
-        order: 98
-    },
-    all: {
-        name: 'All WPT tests',
-        predicate: prefix_predicate(''),
-        order: 99
     }
 }
 
 for (const [idx, folder] of CSS2_FOCUS_FOLDERS.entries()) {
     const path = `/css/CSS2/${folder}/`
     FOCUS_AREAS[folder] = {
-        name: `-- ${path}`,
+        name: `${path}`,
         predicate: prefix_predicate(path),
-        order: idx + 1
+        order: idx + 3
     }
 }
 
