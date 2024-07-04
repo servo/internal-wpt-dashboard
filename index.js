@@ -68,14 +68,22 @@ async function add_run (runs_dir, chunks_dir, date) {
 }
 
 async function recalc_scores (runs_dir) {
+    console.log(`Calculating scores for ${runs_dir} directory...`)
+
     const scores = []
+    console.log('Enumerating runs')
     const all_runs = await all_runs_sorted(runs_dir)
+    const run_count = all_runs.length
+    console.log('Reading latest run')
     const new_run = await read_compressed(`./${runs_dir}/${all_runs[all_runs.length - 1]}`)
+    console.log('Building focus area map')
     const test_to_areas = focus_areas_map(new_run)
     const { area_keys } = get_focus_areas()
-    for (const r of all_runs) {
+    for (const [i, r] of all_runs.entries()) {
         const [date] = r.split('.')
+        console.log(`Reading run ${runs_dir}/${r} (${i}/${run_count})`)
         const run = await read_compressed(`./${runs_dir}/${r}`)
+        console.log(`Calculating score for run ${runs_dir}/${r} (${i}/${run_count})`)
         const score = score_run(run, new_run, test_to_areas)
         const row = [
             date,
@@ -120,7 +128,11 @@ async function main () {
     }
 
     const { area_keys, area_names: focus_areas } = get_focus_areas()
+
+    console.log('Writing site/scores.json')
     write_json_file(
         './site/scores.json', { area_keys, focus_areas, scores })
+
+    console.log('done')
 }
 main()
