@@ -131,10 +131,15 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/css/css-flexbox/'),
         order: 93
     },
+    cssgrid: {
+        name: '/css/css-grid',
+        predicate: prefix_predicate('/css/css-grid/'),
+        order: 94
+    },
     cssalign: {
         name: '/css/css-align',
         predicate: prefix_predicate('/css/css-align/'),
-        order: 94
+        order: 95
     },
     csstext: {
         name: '/css/css-text',
