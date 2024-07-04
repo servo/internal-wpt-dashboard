@@ -133,6 +133,6 @@ async function main () {
     write_json_file(
         './site/scores.json', { area_keys, focus_areas, scores })
 
-    console.log('done')
+    console.log('Done')
 }
 main()
