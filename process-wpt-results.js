@@ -193,7 +193,7 @@ export function score_run (run, against_run, focus_areas_map) {
         } else {
             let test_score = 0
             for (const subtest of subtest_names) {
-                if (run_test.subtests[subtest]) {
+                if (Object.hasOwn(run_test.subtests, subtest)) {
                     test_score += run_test.subtests[subtest].score
                 }
             }
