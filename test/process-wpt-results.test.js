@@ -206,6 +206,39 @@ describe('Scoring', () => {
         const score = score_run(run, run, { test1: ['all'] })
         assert.equal(score.all, 333)
     })
+    it('calculates scores correctly even subtest name collides with JS builtins', () => {
+        const run = {
+            test_scores: {
+                test1: {
+                    score: 0,
+                    subtests: {
+                    }
+                },
+                test2: {
+                    score: 1,
+                    subtests: { }
+                }
+            }
+        }
+
+        const against_run = {
+            test_scores: {
+                test1: {
+                    score: 1,
+                    subtests: {
+                        toString: { score: 1 }
+                    }
+                },
+                test2: {
+                    score: 1,
+                    subtests: { }
+                }
+            }
+        }
+
+        const score = score_run(run, against_run, { test1: ['all'], test2: ['all'] })
+        assert.equal(score.all, 500)
+    })
     it('calculates scores based only on tests in new runs', () => {
         const old_run = {
             test_scores: {
