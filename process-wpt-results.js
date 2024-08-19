@@ -140,6 +140,16 @@ const FOCUS_AREAS = {
         name: '/css/css-text',
         predicate: prefix_predicate('/css/css-text/'),
         order: 95
+    },
+    gamepad: {
+        name: '/gamepad',
+        predicate: prefix_predicate('/gamepad/'),
+        order: 96
+    },
+    webxr: {
+        name: '/webxr',
+        predicate: prefix_predicate('/webxr/'),
+        order: 97
     }
 }
 
