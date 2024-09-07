@@ -6,6 +6,14 @@ google.charts.setOnLoadCallback(setupChart)
 const fetchData = fetch('scores.json')
 const embed = location.search === '?embed'
 
+const periodRanges = {
+    'last month': 1,
+    'last 3 months': 3,
+    'last 6 months': 6,
+    'last year': 12,
+    'all time': null
+}
+
 if (embed) {
     document.documentElement.classList.add('embed')
 }
@@ -96,18 +104,31 @@ function setupChart () {
 
     const node = document.getElementById('servo-chart')
     const area_dropdown = document.getElementById('selected-area')
+    const period_dropdown = document.getElementById('selected-period')
     const show_legacy = document.getElementById('show-legacy')
     const chart = new google.visualization.LineChart(node)
     let all_scores
 
+    Object.keys(periodRanges).forEach(date => {
+        const selector = document.createElement('option')
+        selector.value = date
+        selector.textContent = date
+        period_dropdown.appendChild(selector)
+    })
+
     function update_chart () {
         if (!all_scores) throw new Error('scores not loaded')
         const chosen_area = area_dropdown.value
+        const chosen_period = period_dropdown.value
         const area_index = all_scores.area_keys.indexOf(chosen_area)
         const table = new google.visualization.DataTable()
         const stride = all_scores.area_keys.length
         const legacy_layout = show_legacy.checked
         options.series = []
+        const monthsToSubtract = periodRanges[chosen_period]
+        const minDate = monthsToSubtract
+            ? new Date(maxDate.getFullYear(), maxDate.getMonth() - monthsToSubtract, 1)
+            : null
 
         table.addColumn('date', 'runOn')
 
@@ -125,6 +146,9 @@ function setupChart () {
             const score_2013 = s[area_index + 3]
             const score_2020 = s[stride + area_index + 5]
             const date = parseDateString(s[0])
+            if (date < minDate) {
+                continue
+            }
             const row = [
                 date
             ]
@@ -210,8 +234,10 @@ function setupChart () {
             }
 
             area_dropdown.onchange = update
+            period_dropdown.onchange = update
             show_legacy.onchange = update
             area_dropdown.value = scores.area_keys[1]
+            period_dropdown.value = Object.keys(periodRanges)[4]
             update()
         })
 }
