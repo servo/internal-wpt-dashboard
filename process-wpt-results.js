@@ -131,25 +131,30 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/css/css-flexbox/'),
         order: 93
     },
+    cssgrid: {
+        name: '/css/css-grid',
+        predicate: prefix_predicate('/css/css-grid/'),
+        order: 94
+    },
     cssalign: {
         name: '/css/css-align',
         predicate: prefix_predicate('/css/css-align/'),
-        order: 94
+        order: 95
     },
     csstext: {
         name: '/css/css-text',
         predicate: prefix_predicate('/css/css-text/'),
-        order: 95
+        order: 96
     },
     gamepad: {
         name: '/gamepad',
         predicate: prefix_predicate('/gamepad/'),
-        order: 96
+        order: 97
     },
     webxr: {
         name: '/webxr',
         predicate: prefix_predicate('/webxr/'),
-        order: 97
+        order: 98
     }
 }
 
