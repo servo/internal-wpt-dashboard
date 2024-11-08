@@ -92,7 +92,7 @@ async function recalc_scores (runs_dir) {
         ]
 
         for (const area of area_keys) {
-            row.push(score[area])
+            row.push(score[area].per_mille)
         }
         scores.push(row)
     }
