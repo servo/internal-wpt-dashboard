@@ -129,10 +129,16 @@ async function main () {
         await add_run('runs-2020', chunks_2020, date)
     }
 
-    const scores_2013 = generate_rows(await recalc_detailed_scores('runs'))
-    const scores_2020 = generate_rows(await recalc_detailed_scores('runs-2020'))
-    const scores_by_date = new Map(scores_2020.map(score => [score[0], score]))
+    const detailed_scores_2013 = await recalc_detailed_scores('runs')
+    const detailed_scores_2020 = await recalc_detailed_scores('runs-2020')
+    const detailed_scores = {
+        layout_2013: detailed_scores_2013,
+        layout_2020: detailed_scores_2020,
+    }
 
+    const scores_2013 = generate_rows(detailed_scores_2013)
+    const scores_2020 = generate_rows(detailed_scores_2020)
+    const scores_by_date = new Map(scores_2020.map(score => [score[0], score]))
     const scores = []
     for (const score_2013 of scores_2013) {
         const len = scores.push(score_2013)
@@ -146,7 +152,12 @@ async function main () {
 
     console.log('Writing site/scores.json')
     write_json_file(
-        './site/scores.json', { area_keys, focus_areas, scores })
+        './site/scores.json', {
+            area_keys,
+            focus_areas,
+            scores,
+            detailed_scores,
+        })
 
     console.log('Done')
 }
