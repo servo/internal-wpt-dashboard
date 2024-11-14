@@ -11,7 +11,7 @@ const periodRanges = {
     'last 3 months': 3,
     'last 6 months': 6,
     'last year': 12,
-    'all time': null
+    'since April 2023': null
 }
 
 if (embed) {
