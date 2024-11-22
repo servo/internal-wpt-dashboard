@@ -151,10 +151,20 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/gamepad/'),
         order: 97
     },
+    shadow-dom: {
+        name: '/shadow-dom',
+        predicate: prefix_predicate('/shadow-dom/'),
+        order: 98
+    },
+    WebCryptoAPI: {
+        name: '/WebCryptoAPI',
+        predicate: prefix_predicate('/WebCryptoAPI/'),
+        order: 99
+    },
     webxr: {
         name: '/webxr',
         predicate: prefix_predicate('/webxr/'),
-        order: 98
+        order: 100
     }
 }
 
