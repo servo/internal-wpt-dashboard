@@ -46,10 +46,6 @@ jobs:
           echo Downloaded $SERVO_VERSION
           echo "SERVO_VERSION=$SERVO_VERSION" >> $GITHUB_ENV
         working-directory: servo
-      - name: Layout argument
-        if: inputs.layout-engine == '2013'
-        run: |
-          echo "WPT_LAYOUT_FLAG=--legacy-layout" >> $GITHUB_ENV
       - name: Run tests
         run: |
           python3 ./mach test-wpt \
