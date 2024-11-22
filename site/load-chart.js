@@ -131,7 +131,7 @@ function setupChart () {
         table.addColumn('date', 'runOn')
 
         options.series.push({ color: '#3366CC' })
-        table.addColumn('number', 'Servo Layout')
+        table.addColumn('number', 'Servo')
         table.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
 
         for (const scores_for_run of all_scores.scores) {
@@ -144,7 +144,7 @@ function setupChart () {
             const row = [
                 date,
                 area_score / 1000,
-                toolTip(date, wpt_sha, browser_version, area_score, 'Servo Layout')
+                toolTip(date, wpt_sha, browser_version, area_score, 'Servo')
             ]
             table.addRow(row)
         }
@@ -167,7 +167,7 @@ function setupChart () {
                 'beforeend',
                 `<tr>
                     <th>Test Suite</th>
-                    <th>Servo Layout</th>
+                    <th>Servo</th>
                 </tr>`
             )
 
