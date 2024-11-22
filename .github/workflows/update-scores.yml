@@ -17,12 +17,6 @@ env:
   SHELL: /bin/bash
 
 jobs:
-  wpt-for-layout-2013:
-    uses: ./.github/workflows/run-wpt.yml
-    with:
-      layout-engine: 2013
-      artifact-name: wpt-chunks
-
   wpt-for-layout-2020:
     uses: ./.github/workflows/run-wpt.yml
     with:
@@ -33,19 +27,13 @@ jobs:
     name: Process all chunks and update metrics
     runs-on: ubuntu-22.04
     needs:
-      - wpt-for-layout-2013
       - wpt-for-layout-2020
     steps:
       - name: Checkout dashboard repo
         uses: actions/checkout@v3
         with:
           ref: main
-      - name: Download wpt results for 2013
-        uses: actions/download-artifact@v3
-        with:
-          name: wpt-chunks
-          path: wpt-chunks
-      - name: Download wpt results for 2020
+      - name: Download wpt results for layout 2020
         uses: actions/download-artifact@v3
         with:
           name: wpt-chunks-2020
@@ -57,12 +45,10 @@ jobs:
       - name: Process new test results
         run: |
           CURRENT_DATE=$(date +"%Y-%m-%d")
-          mkdir -p runs
           mkdir -p runs-2020
-          node index.js --add wpt-chunks wpt-chunks-2020 "$CURRENT_DATE"
+          node index.js --add wpt-chunks-2020 "$CURRENT_DATE"
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add runs/${CURRENT_DATE}.xz
           git add runs-2020/${CURRENT_DATE}.xz
           git commit -m "Add runs for $CURRENT_DATE"
           git push
