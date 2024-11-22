@@ -107,25 +107,12 @@ async function main () {
     }
 
     if (mode === '--add') {
-        const chunks_2013 = process.argv[3]
-        const chunks_2020 = process.argv[4]
-        const date = process.argv[5]
-        await add_run('runs', chunks_2013, date)
-        await add_run('runs-2020', chunks_2020, date)
+        const chunks = process.argv[3]
+        const date = process.argv[4]
+        await add_run('runs-2020', chunks, date)
     }
 
-    const scores_2013 = await recalc_scores('runs')
-    const scores_2020 = await recalc_scores('runs-2020')
-    const scores_by_date = new Map(scores_2020.map(score => [score[0], score]))
-
-    const scores = []
-    for (const score_2013 of scores_2013) {
-        const len = scores.push(score_2013)
-        if (scores_by_date.has(score_2013[0])) {
-            const score_2020 = scores_by_date.get(score_2013[0]).slice(1)
-            scores[len - 1].splice(score_2013.length, 0, ...score_2020)
-        }
-    }
+    const scores = await recalc_scores('runs-2020')
 
     const { area_keys, area_names: focus_areas } = get_focus_areas()
 
