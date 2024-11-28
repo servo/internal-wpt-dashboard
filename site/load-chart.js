@@ -207,7 +207,7 @@ function setupChart () {
 
             area_dropdown.onchange = update
             period_dropdown.onchange = update
-            area_dropdown.value = scores.area_keys[1]
+            area_dropdown.value = scores.area_keys[0]
             period_dropdown.value = Object.keys(periodRanges)[4]
             update()
         })
