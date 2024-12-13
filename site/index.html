@@ -58,6 +58,11 @@
             #score-table-body .score {
                 text-align: right;
             }
+
+            #score-explanation {
+                padding: 10px;
+                font-size: 1rem;
+            }
         </style>
     </head>
     <body>
@@ -111,6 +116,15 @@
                     <tbody id="score-table-body">
                     </tbody>
                 </table>
+            </div>
+            <div class="row hide-in-embed" id="score-explanation">
+                Scores are calculated as percentages of total <b>enabled</b>
+                tests within the suite that pass. A passing test with no
+                subtests gets a score of 1 while a test with subtests gets a
+                score between 0 and 1 representing the fraction of passing
+                subtests within that test. This is different from the
+                percentages on wpt.fyi which is calculated by giving equal
+                weight to both top-level tests and subtests.
             </div>
         </div>
     </body>
