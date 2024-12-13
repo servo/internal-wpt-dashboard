@@ -162,15 +162,6 @@ function setupChart () {
         const score_table = document.getElementById('score-table-body')
         removeChildren(score_table)
 
-        removeChildren(document.getElementById('score-table-header'))
-            .insertAdjacentHTML(
-                'beforeend',
-                `<tr>
-                    <th>Test Suite</th>
-                    <th>Servo</th>
-                </tr>`
-            )
-
         for (const [idx, area] of scores.area_keys.entries()) {
             const recent_score = scores.scores[scores.scores.length - 1]
             score_table.insertAdjacentHTML(
@@ -200,15 +191,13 @@ function setupChart () {
                 area_dropdown.appendChild(selector)
             }
 
-            function update () {
-                update_table(scores)
-                update_chart()
-            }
+            update_chart()
 
-            area_dropdown.onchange = update
-            period_dropdown.onchange = update
+            area_dropdown.onchange = update_chart
+            period_dropdown.onchange = update_chart
             area_dropdown.value = scores.area_keys[0]
             period_dropdown.value = Object.keys(periodRanges)[4]
-            update()
+            update_table(scores)
+            update_chart()
         })
 }
