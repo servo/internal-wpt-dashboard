@@ -28,9 +28,14 @@ jobs:
         with:
           repository: servo/servo
           path: servo
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' # Make sure this is the same as .python-version in servo repo
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
       - name: Prep test environment
         run: |
-          python3 -m pip install --upgrade pip virtualenv
           sudo apt update
           sudo apt install -qy --no-install-recommends mesa-vulkan-drivers
       - name: Download latest nightly
@@ -48,7 +53,7 @@ jobs:
         working-directory: servo
       - name: Run tests
         run: |
-          python3 ./mach test-wpt \
+          ./mach test-wpt \
             --release ${WPT_LAYOUT_FLAG} \
             --log-wptreport=wpt-report-${{ matrix.chunk_id }}.json \
             --processes $(nproc) --timeout-multiplier 2 \
