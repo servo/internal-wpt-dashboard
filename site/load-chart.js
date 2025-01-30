@@ -5,6 +5,7 @@ google.charts.setOnLoadCallback(setupChart)
 
 const fetchData = fetch('scores.json')
 const embed = location.search === '?embed'
+let dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
 const periodRanges = {
     'last month': 1,
@@ -51,7 +52,7 @@ function setupChart () {
         fontSize: 16,
         legend: {
             position: 'top',
-            ...(embed
+            ...(dark_mode
                 ? {
                     textStyle: { color: '#f5f5f5' }
                 }
@@ -62,7 +63,7 @@ function setupChart () {
             viewWindow: {
                 max: maxDate
             },
-            ...(embed
+            ...(dark_mode
                 ? {
                     textStyle: { color: '#f5f5f5' }
                 }
@@ -74,7 +75,7 @@ function setupChart () {
                 min: 0,
                 max: 1
             },
-            ...(embed
+            ...(dark_mode
                 ? {
                     textStyle: { color: '#f5f5f5' }
                 }
@@ -91,7 +92,7 @@ function setupChart () {
             isHtml: true,
             trigger: 'both'
         },
-        ...(embed
+        ...(dark_mode
             ? {
                 backgroundColor: '#121619'
             }
@@ -126,7 +127,7 @@ function setupChart () {
 
         table.addColumn('date', 'runOn')
 
-        options.series.push({ color: '#3366CC' })
+        options.series.push({ color: dark_mode ? '#CC9933' : '#3366CC' })
         table.addColumn('number', 'Servo')
         table.addColumn({ type: 'string', role: 'tooltip', p: { html: true } })
 
@@ -191,6 +192,23 @@ function setupChart () {
 
             area_dropdown.onchange = update_chart
             period_dropdown.onchange = update_chart
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',({ matches }) => {
+                    dark_mode = matches
+                    if (dark_mode) {
+                        options.legend.textStyle = { color: '#f5f5f5' }
+                        options.hAxis.textStyle = { color: '#f5f5f5' }
+                        options.vAxis.textStyle = { color: '#f5f5f5' }
+                        options.backgroundColor = '#121619'
+                    } else {
+                        options.legend.textStyle = { color: 'black' }
+                        options.hAxis.textStyle = { color: 'black' }
+                        options.vAxis.textStyle = { color: 'black' }
+                        options.backgroundColor = 'white'
+                    }
+                    update_chart()
+                })
+            }
             area_dropdown.value = scores.area_keys[0]
             period_dropdown.value = Object.keys(periodRanges)[4]
             update_table(scores)
