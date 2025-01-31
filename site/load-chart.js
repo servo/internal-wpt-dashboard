@@ -193,7 +193,7 @@ function setupChart () {
             area_dropdown.onchange = update_chart
             period_dropdown.onchange = update_chart
             if (window.matchMedia) {
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',({ matches }) => {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches }) => {
                     dark_mode = matches
                     if (dark_mode) {
                         options.legend.textStyle = { color: '#f5f5f5' }
