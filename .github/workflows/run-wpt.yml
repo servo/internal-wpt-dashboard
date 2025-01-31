@@ -63,8 +63,8 @@ jobs:
             --total-chunks ${{ env.max_chunk_id }}
         working-directory: servo
       - name: Archive the wpt result chunk
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact-name }} 
+          name: ${{ inputs.artifact-name }}-${{ matrix.chunk_id }}
           path: servo/wpt-report-${{ matrix.chunk_id }}.json
 
