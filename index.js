@@ -1,4 +1,4 @@
-import { opendir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, opendir, readFile, writeFile } from 'node:fs/promises'
 import { compress, decompress } from 'lzma-native'
 import {
     merge_nonoverlap,
@@ -117,6 +117,7 @@ async function main () {
     const { area_keys, area_names: focus_areas } = get_focus_areas()
 
     console.log('Writing site/scores.json')
+    await mkdir('./site', { recursive: true })
     write_json_file(
         './site/scores.json', { area_keys, focus_areas, scores })
 
