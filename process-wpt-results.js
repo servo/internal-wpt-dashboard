@@ -121,9 +121,9 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/css/cssom/'),
         order: 91
     },
-    csspos: {
-        name: '/css/css-position',
-        predicate: prefix_predicate('/css/css-position/'),
+    cssalign: {
+        name: '/css/css-align',
+        predicate: prefix_predicate('/css/css-align/'),
         order: 92
     },
     cssflex: {
@@ -136,10 +136,15 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/css/css-grid/'),
         order: 94
     },
-    cssalign: {
-        name: '/css/css-align',
-        predicate: prefix_predicate('/css/css-align/'),
+    csspos: {
+        name: '/css/css-position',
+        predicate: prefix_predicate('/css/css-position/'),
         order: 95
+    },
+    csssizing: {
+        name: '/css/css-sizing',
+        predicate: prefix_predicate('/css/css-sizing/'),
+        order: 95.5
     },
     csstext: {
         name: '/css/css-text',
