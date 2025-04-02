@@ -146,6 +146,12 @@ describe('Process wpt result', () => {
     })
 })
 
+function checkScore (actual, expected) {
+    actual.per_mille = Math.floor(1000 * actual.total_score / actual.total_tests)
+    actual.per_mille_subtests = Math.floor(1000 * actual.total_subtests_passed / actual.total_subtests)
+    assert.deepEqual(actual, expected)
+}
+
 describe('Scoring', () => {
     it('calculates scores for individual tests', () => {
         const run = {
@@ -166,11 +172,109 @@ describe('Scoring', () => {
             test2: ['all']
         }
         let score = score_run(run, run, focus_area_map)
-        assert.deepEqual(score.all, 1000)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 2,
+                per_mille: 1000,
+                total_subtests: 2,
+                total_subtests_passed: 2,
+                per_mille_subtests: 1000
+            })
 
         run.test_scores.test2.score = 0
         score = score_run(run, run, focus_area_map)
-        assert.deepEqual(score.all, 500)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 1,
+                per_mille: 500,
+                total_subtests: 2,
+                total_subtests_passed: 1,
+                per_mille_subtests: 500
+            })
+    })
+    it('calculates subtests count', () => {
+        const run = {
+            test_scores: {
+                test1: {
+                    score: 1,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 1 },
+                        subtest3: { score: 1 }
+                    }
+                },
+                test2: {
+                    score: 0,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 0 }
+                    }
+                }
+            }
+        }
+
+        const focus_area_map = {
+            test1: ['all'],
+            test2: ['all']
+        }
+        const score = score_run(run, run, focus_area_map)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 1.5,
+                per_mille: 750,
+                total_subtests: 5,
+                total_subtests_passed: 4,
+                per_mille_subtests: 800
+            })
+    })
+    it('calculates subtests counts with simple tests', () => {
+        const run = {
+            test_scores: {
+                test1: {
+                    score: 1,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 1 },
+                        subtest3: { score: 1 }
+                    }
+                },
+                test2: {
+                    score: 0,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 0 }
+                    }
+                },
+                test3: {
+                    score: 1,
+                    subtests: {}
+                },
+                test4: {
+                    score: 0,
+                    subtests: {}
+                }
+            }
+        }
+
+        const focus_area_map = {
+            test1: ['all'],
+            test2: ['all'],
+            test3: ['all'],
+            test4: ['all']
+        }
+        const score = score_run(run, run, focus_area_map)
+        checkScore(score.all,
+            {
+                total_tests: 4,
+                total_score: 2.5,
+                per_mille: 625,
+                total_subtests: 7,
+                total_subtests_passed: 5,
+                per_mille_subtests: 714
+            })
     })
     it('calculates scores for subtests', () => {
         const run = {
@@ -187,7 +291,15 @@ describe('Scoring', () => {
         }
 
         const score = score_run(run, run, { test1: ['all'] })
-        assert.equal(score.all, 1000)
+        checkScore(score.all,
+            {
+                total_tests: 1,
+                total_score: 1,
+                per_mille: 1000,
+                total_subtests: 3,
+                total_subtests_passed: 3,
+                per_mille_subtests: 1000
+            })
     })
     it('calculates scores for subtests by averaging', () => {
         const run = {
@@ -204,7 +316,15 @@ describe('Scoring', () => {
         }
 
         const score = score_run(run, run, { test1: ['all'] })
-        assert.equal(score.all, 333)
+        checkScore(score.all,
+            {
+                total_tests: 1,
+                total_score: 1 / 3,
+                per_mille: 333,
+                total_subtests: 3,
+                total_subtests_passed: 1,
+                per_mille_subtests: 333
+            })
     })
     it('calculates scores correctly even subtest name collides with JS builtins', () => {
         const run = {
@@ -237,7 +357,15 @@ describe('Scoring', () => {
         }
 
         const score = score_run(run, against_run, { test1: ['all'], test2: ['all'] })
-        assert.equal(score.all, 500)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 1,
+                per_mille: 500,
+                total_subtests: 2,
+                total_subtests_passed: 1,
+                per_mille_subtests: 500
+            })
     })
     it('calculates scores based only on tests in new runs', () => {
         const old_run = {
@@ -258,11 +386,93 @@ describe('Scoring', () => {
             test1: all, test2: all, test3: all
         }
         let score = score_run(old_run, new_run, focus_map)
-        assert.equal(score.all, 0)
-
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 0,
+                per_mille: 0,
+                total_subtests: 2,
+                total_subtests_passed: 0,
+                per_mille_subtests: 0
+            })
         old_run.test_scores.test3.score = 1
         score = score_run(old_run, new_run, focus_map)
-        assert.equal(score.all, 500)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 1,
+                per_mille: 500,
+                total_subtests: 2,
+                total_subtests_passed: 1,
+                per_mille_subtests: 500
+            })
+    })
+    it('calculates scores based only on subtests in new runs', () => {
+        const old_run = {
+            test_scores: {
+                test1: {
+                    score: 0,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 0 }
+                    }
+                },
+                test3: {
+                    score: 0,
+                    subtests: {
+                        subtest1: { score: 0 },
+                        subtest2: { score: 1 }
+                    }
+                }
+            }
+        }
+        const new_run = {
+            test_scores: {
+                test2: {
+                    score: 1,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 1 },
+                        subtest3: { score: 1 },
+                        subtest4: { score: 1 }
+                    }
+                },
+                test3: {
+                    score: 1,
+                    subtests: {
+                        subtest1: { score: 1 },
+                        subtest2: { score: 1 }
+                    }
+                }
+            }
+        }
+
+        const all = ['all']
+        const focus_map = {
+            test1: all, test2: all, test3: all
+        }
+        let score = score_run(old_run, new_run, focus_map)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 0.5,
+                per_mille: 250,
+                total_subtests: 6,
+                total_subtests_passed: 1,
+                per_mille_subtests: 166
+            })
+        old_run.test_scores.test3.score = 1
+        old_run.test_scores.test3.subtests.subtest1.score = 1
+        score = score_run(old_run, new_run, focus_map)
+        checkScore(score.all,
+            {
+                total_tests: 2,
+                total_score: 1,
+                per_mille: 500,
+                total_subtests: 6,
+                total_subtests_passed: 2,
+                per_mille_subtests: 333
+            })
     })
 })
 

@@ -113,6 +113,7 @@ async function main () {
     }
 
     const scores = await recalc_scores('runs-2020')
+    const scores_last_run = scores[scores.length - 1]
 
     const { area_keys, area_names: focus_areas } = get_focus_areas()
 
@@ -120,6 +121,9 @@ async function main () {
     await mkdir('./site', { recursive: true })
     write_json_file(
         './site/scores.json', { area_keys, focus_areas, scores })
+    console.log('Writing site/scores-last-run.json')
+    write_json_file(
+        './site/scores-last-run.json', { area_keys, focus_areas, scores_last_run })
 
     console.log('Done')
 }

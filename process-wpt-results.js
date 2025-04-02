@@ -199,15 +199,19 @@ export function score_run (run, against_run, focus_areas_map) {
     for (const area of Object.keys(FOCUS_AREAS)) {
         scores[area] = {
             total_tests: 0,
-            total_score: 0
+            total_score: 0,
+            total_subtests: 0,
+            total_subtests_passed: 0
         }
     }
 
     for (const [test, { subtests }] of Object.entries(against_run.test_scores)) {
         const areas = focus_areas_map[test]
+        const subtest_names = Object.keys(subtests)
 
         for (const area of areas) {
             scores[area].total_tests += 1
+            scores[area].total_subtests += !subtest_names.length ? 1 : subtest_names.length
         }
 
         const run_test = run.test_scores[test]
@@ -215,32 +219,24 @@ export function score_run (run, against_run, focus_areas_map) {
         // score new tests not present in older runs
         if (!run_test) continue
 
-        const subtest_names = Object.keys(subtests)
         if (!subtest_names.length) {
             for (const area of areas) {
                 scores[area].total_score += run_test.score
+                scores[area].total_subtests_passed += run_test.score
             }
         } else {
-            let test_score = 0
+            let subtests_passed = 0
             for (const subtest of subtest_names) {
                 if (Object.hasOwn(run_test.subtests, subtest)) {
-                    test_score += run_test.subtests[subtest].score
+                    subtests_passed += run_test.subtests[subtest].score
                 }
             }
-            test_score /= subtest_names.length
             for (const area of areas) {
-                scores[area].total_score += test_score
+                scores[area].total_score += subtests_passed / subtest_names.length
+                scores[area].total_subtests_passed += subtests_passed
             }
         }
     }
 
-    return Object.entries(scores).reduce((scores, [area, totals]) => {
-        scores[area] = 0
-        if (totals.total_tests !== 0) {
-            scores[area] = Math.floor(
-                1000 * totals.total_score / totals.total_tests
-            )
-        }
-        return scores
-    }, {})
+    return scores
 }
