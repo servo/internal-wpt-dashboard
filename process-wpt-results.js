@@ -161,15 +161,20 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/shadow-dom/'),
         order: 98
     },
+    streams: {
+        name: '/streams',
+        predicate: prefix_predicate('/streams/'),
+        order: 99
+    },
     webcryptoapi: {
         name: '/WebCryptoAPI',
         predicate: prefix_predicate('/WebCryptoAPI/'),
-        order: 99
+        order: 100
     },
     webxr: {
         name: '/webxr',
         predicate: prefix_predicate('/webxr/'),
-        order: 100
+        order: 101
     }
 }
 
