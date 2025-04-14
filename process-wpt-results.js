@@ -101,15 +101,20 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate(''),
         order: 0
     },
+    csp: {
+        name: '/content-security-policy',
+        predicate: prefix_predicate('/content-security-policy/'),
+        order: 1
+    },
     css: {
         name: '/css',
         predicate: prefix_predicate('/css/'),
-        order: 1
+        order: 2
     },
     css2: {
         name: '/css/CSS2',
         predicate: prefix_predicate('/css/CSS2/'),
-        order: 2
+        order: 3
     },
     csstable: {
         name: '/css/CSS2/tables & /css/css-tables',
@@ -166,15 +171,20 @@ const FOCUS_AREAS = {
         predicate: prefix_predicate('/streams/'),
         order: 99
     },
+    trustedtypes: {
+        name: '/trusted-types',
+        predicate: prefix_predicate('/trusted-types/'),
+        order: 100
+    },
     webcryptoapi: {
         name: '/WebCryptoAPI',
         predicate: prefix_predicate('/WebCryptoAPI/'),
-        order: 100
+        order: 101
     },
     webxr: {
         name: '/webxr',
         predicate: prefix_predicate('/webxr/'),
-        order: 101
+        order: 102
     }
 }
 
