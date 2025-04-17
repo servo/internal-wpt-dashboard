@@ -1,0 +1,16 @@
+name: Benchmark Rust Scoring
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install wptreport
+        run: cargo install wptreport
+      - name: Recalc scores 
+        run: wptreport runs-2020
