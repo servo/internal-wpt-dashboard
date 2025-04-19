@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 import {
+    get_focus_areas,
     merge_nonoverlap,
     score_run,
     process_raw_results,
@@ -167,12 +168,13 @@ describe('Scoring', () => {
             }
         }
 
+        const index = 0
         const focus_area_map = {
-            test1: ['all'],
-            test2: ['all']
+            test1: [index],
+            test2: [index]
         }
         let score = score_run(run, run, focus_area_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 2,
@@ -184,7 +186,7 @@ describe('Scoring', () => {
 
         run.test_scores.test2.score = 0
         score = score_run(run, run, focus_area_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 1,
@@ -215,12 +217,13 @@ describe('Scoring', () => {
             }
         }
 
+        const index = 0
         const focus_area_map = {
-            test1: ['all'],
-            test2: ['all']
+            test1: [index],
+            test2: [index]
         }
         const score = score_run(run, run, focus_area_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 1.5,
@@ -259,14 +262,15 @@ describe('Scoring', () => {
             }
         }
 
+        const index = 0
         const focus_area_map = {
-            test1: ['all'],
-            test2: ['all'],
-            test3: ['all'],
-            test4: ['all']
+            test1: [index],
+            test2: [index],
+            test3: [index],
+            test4: [index]
         }
         const score = score_run(run, run, focus_area_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 4,
                 total_score: 2.5,
@@ -290,8 +294,9 @@ describe('Scoring', () => {
             }
         }
 
-        const score = score_run(run, run, { test1: ['all'] })
-        checkScore(score.all,
+        const index = 0
+        const score = score_run(run, run, { test1: [index] })
+        checkScore(score[index],
             {
                 total_tests: 1,
                 total_score: 1,
@@ -315,8 +320,9 @@ describe('Scoring', () => {
             }
         }
 
-        const score = score_run(run, run, { test1: ['all'] })
-        checkScore(score.all,
+        const index = 0
+        const score = score_run(run, run, { test1: [index] })
+        checkScore(score[index],
             {
                 total_tests: 1,
                 total_score: 1 / 3,
@@ -356,8 +362,9 @@ describe('Scoring', () => {
             }
         }
 
-        const score = score_run(run, against_run, { test1: ['all'], test2: ['all'] })
-        checkScore(score.all,
+        const index = 0
+        const score = score_run(run, against_run, { test1: [index], test2: [index] })
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 1,
@@ -381,12 +388,13 @@ describe('Scoring', () => {
             }
         }
 
-        const all = ['all']
+        const index = 0
+        const all = [index]
         const focus_map = {
             test1: all, test2: all, test3: all
         }
         let score = score_run(old_run, new_run, focus_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 0,
@@ -397,7 +405,7 @@ describe('Scoring', () => {
             })
         old_run.test_scores.test3.score = 1
         score = score_run(old_run, new_run, focus_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 1,
@@ -447,12 +455,13 @@ describe('Scoring', () => {
             }
         }
 
-        const all = ['all']
+        const index = 0
+        const all = [index]
         const focus_map = {
             test1: all, test2: all, test3: all
         }
         let score = score_run(old_run, new_run, focus_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 0.5,
@@ -464,7 +473,7 @@ describe('Scoring', () => {
         old_run.test_scores.test3.score = 1
         old_run.test_scores.test3.subtests.subtest1.score = 1
         score = score_run(old_run, new_run, focus_map)
-        checkScore(score.all,
+        checkScore(score[index],
             {
                 total_tests: 2,
                 total_score: 1,
@@ -495,27 +504,31 @@ describe('focus areas', () => {
             }
         }
         const map = focus_areas_map(run)
+        const { area_names } = get_focus_areas()
+        for (const key of Object.keys(map)) {
+            map[key] = map[key].map(index => area_names[index])
+        }
         assert.deepEqual(map, {
             '/css/CSS2/floats-clear/float-replaced-width-004.xht': [
-                'all',
-                'css',
-                'css2',
-                'floats-clear'
+                'All WPT tests',
+                '/css',
+                '/css/CSS2',
+                '/css/CSS2/floats-clear/'
             ],
             '/css/CSS2/abspos/static-inside-table-cell.html': [
-                'all',
-                'css',
-                'css2',
-                'abspos'
+                'All WPT tests',
+                '/css',
+                '/css/CSS2',
+                '/css/CSS2/abspos/'
             ],
             '/css/CSS2/margin-padding-clear/margin-right-078.xht': [
-                'all',
-                'css',
-                'css2',
-                'margin-padding-clear'
+                'All WPT tests',
+                '/css',
+                '/css/CSS2',
+                '/css/CSS2/margin-padding-clear/'
             ],
             '/workers/semantics/multiple-workers/001.html': [
-                'all'
+                'All WPT tests'
             ]
         })
     })
