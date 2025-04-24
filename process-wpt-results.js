@@ -82,99 +82,46 @@ function prefix_predicate (prefix) {
     return test_name => test_name.startsWith(prefix)
 }
 
-const CSS2_FOCUS_FOLDERS = [
-    'abspos',
-    'box-display',
-    'floats',
-    'floats-clear',
-    'linebox',
-    'margin-padding-clear',
-    'normal-flow',
-    'positioning'
-]
-
-const CSS_TABLES_PREDICATE = /^\/css\/(CSS2\/tables|css-tables)\//
+function prefix_area (prefix) {
+    return {
+        name: prefix,
+        predicate: prefix_predicate(prefix)
+    }
+}
 
 const FOCUS_AREAS = [
     {
         name: 'All WPT tests',
         predicate: prefix_predicate('')
     },
+    prefix_area('/content-security-policy/'),
+    prefix_area('/css/'),
+    prefix_area('/css/CSS2/'),
+    prefix_area('/css/CSS2/abspos/'),
+    prefix_area('/css/CSS2/box-display/'),
+    prefix_area('/css/CSS2/floats/'),
+    prefix_area('/css/CSS2/floats-clear/'),
+    prefix_area('/css/CSS2/linebox/'),
+    prefix_area('/css/CSS2/margin-padding-clear/'),
+    prefix_area('/css/CSS2/normal-flow/'),
+    prefix_area('/css/CSS2/positioning/'),
     {
-        name: '/content-security-policy',
-        predicate: prefix_predicate('/content-security-policy/')
+        name: '/css/CSS2/tables/ & /css/css-tables/',
+        predicate: regex_predicate(/^\/css\/(CSS2\/tables|css-tables)\//)
     },
-    {
-        name: '/css',
-        predicate: prefix_predicate('/css/')
-    },
-    {
-        name: '/css/CSS2',
-        predicate: prefix_predicate('/css/CSS2/')
-    },
-    ...CSS2_FOCUS_FOLDERS.map(folder => {
-        const path = `/css/CSS2/${folder}/`
-        return {
-            name: `${path}`,
-            predicate: prefix_predicate(path)
-        }
-    }),
-    {
-        name: '/css/CSS2/tables & /css/css-tables',
-        predicate: regex_predicate(CSS_TABLES_PREDICATE)
-    },
-    {
-        name: '/css/cssom',
-        predicate: prefix_predicate('/css/cssom/')
-    },
-    {
-        name: '/css/css-align',
-        predicate: prefix_predicate('/css/css-align/')
-    },
-    {
-        name: '/css/css-flexbox',
-        predicate: prefix_predicate('/css/css-flexbox/')
-    },
-    {
-        name: '/css/css-grid',
-        predicate: prefix_predicate('/css/css-grid/')
-    },
-    {
-        name: '/css/css-position',
-        predicate: prefix_predicate('/css/css-position/')
-    },
-    {
-        name: '/css/css-sizing',
-        predicate: prefix_predicate('/css/css-sizing/')
-    },
-    {
-        name: '/css/css-text',
-        predicate: prefix_predicate('/css/css-text/')
-    },
-    {
-        name: '/gamepad',
-        predicate: prefix_predicate('/gamepad/')
-    },
-    {
-        name: '/shadow-dom',
-        predicate: prefix_predicate('/shadow-dom/')
-    },
-    {
-        name: '/streams',
-        predicate: prefix_predicate('/streams/')
-    },
-    {
-        name: '/trusted-types',
-        predicate: prefix_predicate('/trusted-types/')
-    },
-    {
-        name: '/WebCryptoAPI',
-        predicate: prefix_predicate('/WebCryptoAPI/')
-    },
-    {
-        name: '/webxr',
-        predicate: prefix_predicate('/webxr/')
-    }
+    prefix_area('/css/cssom/'),
+    prefix_area('/css/css-align/'),
+    prefix_area('/css/css-flexbox/'),
+    prefix_area('/css/css-grid/'),
+    prefix_area('/css/css-position/'),
+    prefix_area('/css/css-sizing/'),
+    prefix_area('/css/css-text/'),
+    prefix_area('/gamepad/'),
+    prefix_area('/shadow-dom/'),
+    prefix_area('/streams/'),
+    prefix_area('/trusted-types/'),
+    prefix_area('/WebCryptoAPI/'),
+    prefix_area('/webxr/')
 ]
 
 export function get_focus_areas () {
