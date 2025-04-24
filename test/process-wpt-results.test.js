@@ -511,20 +511,20 @@ describe('focus areas', () => {
         assert.deepEqual(map, {
             '/css/CSS2/floats-clear/float-replaced-width-004.xht': [
                 'All WPT tests',
-                '/css',
-                '/css/CSS2',
+                '/css/',
+                '/css/CSS2/',
                 '/css/CSS2/floats-clear/'
             ],
             '/css/CSS2/abspos/static-inside-table-cell.html': [
                 'All WPT tests',
-                '/css',
-                '/css/CSS2',
+                '/css/',
+                '/css/CSS2/',
                 '/css/CSS2/abspos/'
             ],
             '/css/CSS2/margin-padding-clear/margin-right-078.xht': [
                 'All WPT tests',
-                '/css',
-                '/css/CSS2',
+                '/css/',
+                '/css/CSS2/',
                 '/css/CSS2/margin-padding-clear/'
             ],
             '/workers/semantics/multiple-workers/001.html': [
