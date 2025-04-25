@@ -78,7 +78,6 @@ async function recalc_scores (runs_dir) {
     const new_run = await read_compressed(`./${runs_dir}/${all_runs[all_runs.length - 1]}`)
     console.log('Building focus area map')
     const test_to_areas = focus_areas_map(new_run)
-    const { area_keys } = get_focus_areas()
     for (const [i, r] of all_runs.entries()) {
         const [date] = r.split('.')
         console.log(`Reading run ${runs_dir}/${r} (${i}/${run_count})`)
@@ -88,12 +87,10 @@ async function recalc_scores (runs_dir) {
         const row = [
             date,
             run.run_info.revision.substring(0, 9),
-            run.run_info.browser_version
+            run.run_info.browser_version,
+            ...score
         ]
 
-        for (const area of area_keys) {
-            row.push(score[area])
-        }
         scores.push(row)
     }
 
@@ -115,7 +112,8 @@ async function main () {
     const scores = await recalc_scores('runs-2020')
     const scores_last_run = scores[scores.length - 1]
 
-    const { area_keys, area_names: focus_areas } = get_focus_areas()
+    const focus_areas = get_focus_areas()
+    const area_keys = Object.keys(focus_areas)
 
     console.log('Writing site/scores.json')
     await mkdir('./site', { recursive: true })

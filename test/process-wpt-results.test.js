@@ -504,7 +504,7 @@ describe('focus areas', () => {
             }
         }
         const map = focus_areas_map(run)
-        const { area_names } = get_focus_areas()
+        const area_names = get_focus_areas()
         for (const key of Object.keys(map)) {
             map[key] = map[key].map(index => area_names[index])
         }

@@ -125,14 +125,7 @@ const FOCUS_AREAS = [
 ]
 
 export function get_focus_areas () {
-    const area_keys = []
-    const area_names = {}
-    for (const [key, area] of Object.entries(FOCUS_AREAS)) {
-        area_keys.push(key)
-        area_names[key] = area.name
-    }
-
-    return { area_keys, area_names }
+    return FOCUS_AREAS.map(area => area.name)
 }
 
 export function score_run (run, against_run, focus_areas_map) {
