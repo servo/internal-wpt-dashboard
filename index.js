@@ -113,15 +113,14 @@ async function main () {
     const scores_last_run = scores[scores.length - 1]
 
     const focus_areas = get_focus_areas()
-    const area_keys = Object.keys(focus_areas)
 
     console.log('Writing site/scores.json')
     await mkdir('./site', { recursive: true })
     write_json_file(
-        './site/scores.json', { area_keys, focus_areas, scores })
+        './site/scores.json', { focus_areas, scores })
     console.log('Writing site/scores-last-run.json')
     write_json_file(
-        './site/scores-last-run.json', { area_keys, focus_areas, scores_last_run })
+        './site/scores-last-run.json', { focus_areas, scores_last_run })
 
     console.log('Done')
 }
