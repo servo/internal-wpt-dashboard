@@ -84,12 +84,12 @@ async function recalc_scores (runs_dir) {
         const run = await read_compressed(`./${runs_dir}/${r}`)
         console.log(`Calculating score for run ${runs_dir}/${r} (${i}/${run_count})`)
         const score = score_run(run, new_run, test_to_areas)
-        const row = [
+        const row = {
             date,
-            run.run_info.revision.substring(0, 9),
-            run.run_info.browser_version,
-            ...score
-        ]
+            wpt_revision: run.run_info.revision.substring(0, 9),
+            product_revision: run.run_info.browser_version,
+            scores: score
+        }
 
         scores.push(row)
     }
