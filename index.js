@@ -70,7 +70,7 @@ async function add_run (runs_dir, chunks_dir, date) {
 async function recalc_scores (runs_dir) {
     console.log(`Calculating scores for ${runs_dir} directory...`)
 
-    const scores = []
+    const run_results = []
     console.log('Enumerating runs')
     const all_runs = await all_runs_sorted(runs_dir)
     const run_count = all_runs.length
@@ -84,17 +84,17 @@ async function recalc_scores (runs_dir) {
         const run = await read_compressed(`./${runs_dir}/${r}`)
         console.log(`Calculating score for run ${runs_dir}/${r} (${i}/${run_count})`)
         const score = score_run(run, new_run, test_to_areas)
-        const row = [
+        const row = {
             date,
-            run.run_info.revision.substring(0, 9),
-            run.run_info.browser_version,
-            ...score
-        ]
+            wpt_revision: run.run_info.revision.substring(0, 9),
+            product_revision: run.run_info.browser_version,
+            scores: score
+        }
 
-        scores.push(row)
+        run_results.push(row)
     }
 
-    return scores
+    return run_results
 }
 
 async function main () {
@@ -109,18 +109,18 @@ async function main () {
         await add_run('runs-2020', chunks, date)
     }
 
-    const scores = await recalc_scores('runs-2020')
-    const scores_last_run = scores[scores.length - 1]
+    const run_results = await recalc_scores('runs-2020')
+    const last_run = run_results[run_results.length - 1]
 
     const focus_areas = get_focus_areas()
 
     console.log('Writing site/scores.json')
     await mkdir('./site', { recursive: true })
     write_json_file(
-        './site/scores.json', { focus_areas, scores })
+        './site/scores.json', { focus_areas, runs: run_results })
     console.log('Writing site/scores-last-run.json')
     write_json_file(
-        './site/scores-last-run.json', { focus_areas, scores_last_run })
+        './site/scores-last-run.json', { focus_areas, last_run })
 
     console.log('Done')
 }
