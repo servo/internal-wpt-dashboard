@@ -59,7 +59,42 @@ async function process_chunks (path) {
         delete scored_chunk.run_info
         result = merge_nonoverlap(result, scored_chunk)
     }
+
+    sort_test_results(result)
+
     return result
+}
+
+// Sorts the keys of the test_scores object alphabetically
+function sort_test_results (result) {
+    result.test_scores = sort_object(result.test_scores)
+}
+
+// Sorts the keys of an objects
+//
+// JS objects serialize keys in insertion order, so to control the order of JSON serialized output
+// we can:
+//
+// - Convert the object into an array
+// - Sort the array by test object key
+// - Reinsert the results into a new object in order
+//
+// This sort is not perfect as JS will still serialize keys that can be parsed as integers before
+// all other keys, but it's a lot better than nothing.
+function sort_object (obj) {
+    const arr = Object.entries(obj).map(([key, value]) => ({ key, value }))
+    arr.sort((a, b) => {
+        if (a.key < b.key) return -1
+        if (a.key > b.key) return 1
+        return 0
+    })
+
+    const obj2 = {}
+    for (const entry of arr) {
+        obj2[entry.key] = entry.value
+    }
+
+    return obj2
 }
 
 async function add_run (runs_dir, chunks_dir, date) {
