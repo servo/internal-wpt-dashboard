@@ -36,6 +36,7 @@ async function all_runs_sorted (runs_dir) {
     const dir = await opendir(`./${runs_dir}`)
     const runs = []
     for await (const run of dir) {
+        if (run.name === '.DS_Store') continue
         runs.push(run.name)
     }
 
@@ -47,6 +48,8 @@ async function process_chunks (path) {
     const dir = await opendir(path)
     let result = {}
     for await (const chunk of dir) {
+        if (chunk.name === '.DS_Store') continue
+        console.log(`Processing chunk ${chunk.name}`)
         const chunk_run = await read_json_file(`${path}/${chunk.name}`)
         const scored_chunk = process_raw_results(chunk_run)
         if (!result.run_info) {
@@ -67,21 +70,21 @@ async function process_chunks (path) {
 
 // Sorts the keys of the test_scores object alphabetically
 function sort_test_results (result) {
-    result.test_scores = sort_object(result.test_scores)
+    console.log('Sorting results')
+    result.test_scores = into_sorted_map(result.test_scores)
 }
 
-// Sorts the keys of an objects
+// Convert an object into a sorted Map
 //
-// JS objects serialize keys in insertion order, so to control the order of JSON serialized output
+// JS Maps serialize keys in insertion order, so to control the order of JSON serialized output
 // we can:
 //
 // - Convert the object into an array
 // - Sort the array by test object key
-// - Reinsert the results into a new object in order
+// - Reinsert the results into a new Map in order
 //
-// This sort is not perfect as JS will still serialize keys that can be parsed as integers before
-// all other keys, but it's a lot better than nothing.
-function sort_object (obj) {
+// Storing the result in a Map rather a regular object allows us to have full control over the order
+function into_sorted_map (obj) {
     const arr = Object.entries(obj).map(([key, value]) => ({ key, value }))
     arr.sort((a, b) => {
         if (a.key < b.key) return -1
@@ -89,12 +92,12 @@ function sort_object (obj) {
         return 0
     })
 
-    const obj2 = {}
+    const map = new Map()
     for (const entry of arr) {
-        obj2[entry.key] = entry.value
+        map[entry.key] = entry.value
     }
 
-    return obj2
+    return map
 }
 
 async function add_run (runs_dir, chunks_dir, date) {
