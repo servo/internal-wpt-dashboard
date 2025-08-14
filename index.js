@@ -36,6 +36,7 @@ async function all_runs_sorted (runs_dir) {
     const dir = await opendir(`./${runs_dir}`)
     const runs = []
     for await (const run of dir) {
+        if (run.name === '.DS_Store') continue
         runs.push(run.name)
     }
 
@@ -47,6 +48,8 @@ async function process_chunks (path) {
     const dir = await opendir(path)
     let result = {}
     for await (const chunk of dir) {
+        if (chunk.name === '.DS_Store') continue
+        console.log(`Processing chunk ${chunk.name}`)
         const chunk_run = await read_json_file(`${path}/${chunk.name}`)
         const scored_chunk = process_raw_results(chunk_run)
         if (!result.run_info) {
@@ -59,7 +62,42 @@ async function process_chunks (path) {
         delete scored_chunk.run_info
         result = merge_nonoverlap(result, scored_chunk)
     }
+
+    sort_test_results(result)
+
     return result
+}
+
+// Sorts the keys of the test_scores object alphabetically
+function sort_test_results (result) {
+    console.log('Sorting results')
+    result.test_scores = into_sorted_map(result.test_scores)
+}
+
+// Convert an object into a sorted Map
+//
+// JS Maps serialize keys in insertion order, so to control the order of JSON serialized output
+// we can:
+//
+// - Convert the object into an array
+// - Sort the array by test object key
+// - Reinsert the results into a new Map in order
+//
+// Storing the result in a Map rather a regular object allows us to have full control over the order
+function into_sorted_map (obj) {
+    const arr = Object.entries(obj).map(([key, value]) => ({ key, value }))
+    arr.sort((a, b) => {
+        if (a.key < b.key) return -1
+        if (a.key > b.key) return 1
+        return 0
+    })
+
+    const map = new Map()
+    for (const entry of arr) {
+        map[entry.key] = entry.value
+    }
+
+    return map
 }
 
 async function add_run (runs_dir, chunks_dir, date) {
