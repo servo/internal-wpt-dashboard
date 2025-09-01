@@ -117,6 +117,7 @@ const FOCUS_AREAS = [
     prefix_area('/css/css-sizing/'),
     prefix_area('/css/css-text/'),
     prefix_area('/gamepad/'),
+    prefix_area('/IndexedDB/'),
     prefix_area('/shadow-dom/'),
     prefix_area('/streams/'),
     prefix_area('/trusted-types/'),
