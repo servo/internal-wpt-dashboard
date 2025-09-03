@@ -122,6 +122,7 @@ const FOCUS_AREAS = [
     prefix_area('/streams/'),
     prefix_area('/trusted-types/'),
     prefix_area('/WebCryptoAPI/'),
+    prefix_area('/webdriver/tests/classic/'),
     prefix_area('/webxr/')
 ]
 
