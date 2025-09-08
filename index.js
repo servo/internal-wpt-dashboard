@@ -55,8 +55,9 @@ async function process_chunks (path) {
         if (!result.run_info) {
             const raw_run_info = scored_chunk.run_info
             const matches = raw_run_info
-                .browser_version.match(/^Servo ([0-9.]+-[a-f0-9]+)?(-dirty)?$/)
-            const browser_version = matches.length === 3 ? matches[1] : 'Unknown'
+                .browser_version
+                .match(/^Version: Servo ([0-9.]+-[a-f0-9]+)?(-dirty)?$/)
+            const browser_version = matches && matches.length === 3 ? matches[1] : 'Unknown'
             result.run_info = Object.assign(raw_run_info, { browser_version })
         }
         delete scored_chunk.run_info
