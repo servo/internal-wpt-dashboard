@@ -95,6 +95,7 @@ const FOCUS_AREAS = [
         predicate: prefix_predicate('')
     },
     prefix_area('/content-security-policy/'),
+    prefix_area('/credential-management/'),
     prefix_area('/css/'),
     prefix_area('/css/CSS2/'),
     prefix_area('/css/CSS2/abspos/'),
