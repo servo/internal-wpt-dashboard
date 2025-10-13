@@ -98,14 +98,10 @@ const FOCUS_AREAS = [
     prefix_area('/credential-management/'),
     prefix_area('/css/'),
     prefix_area('/css/CSS2/'),
-    prefix_area('/css/CSS2/abspos/'),
     prefix_area('/css/CSS2/box-display/'),
     prefix_area('/css/CSS2/floats/'),
     prefix_area('/css/CSS2/floats-clear/'),
     prefix_area('/css/CSS2/linebox/'),
-    prefix_area('/css/CSS2/margin-padding-clear/'),
-    prefix_area('/css/CSS2/normal-flow/'),
-    prefix_area('/css/CSS2/positioning/'),
     {
         name: '/css/CSS2/tables/ & /css/css-tables/',
         predicate: regex_predicate(/^\/css\/(CSS2\/tables|css-tables)\//)
@@ -119,9 +115,7 @@ const FOCUS_AREAS = [
     prefix_area('/css/css-text/'),
     prefix_area('/gamepad/'),
     prefix_area('/IndexedDB/'),
-    prefix_area('/shadow-dom/'),
     prefix_area('/streams/'),
-    prefix_area('/trusted-types/'),
     prefix_area('/WebCryptoAPI/'),
     prefix_area('/webdriver/tests/classic/'),
     prefix_area('/webxr/')
