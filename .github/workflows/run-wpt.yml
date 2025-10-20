@@ -1,7 +1,7 @@
 name: Reusable workflow to execute WPT against Servo nightly.
 
 env:
-  NIGHTLY_PATH: https://download.servo.org/nightly/linux/servo-latest.tar.gz
+  NIGHTLY_PATH: https://download.servo.org/nightly/linux/servo-x86_64-linux-gnu.tar.gz
 
 on:
   workflow_call:
