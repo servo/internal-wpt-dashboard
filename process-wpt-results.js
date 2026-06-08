@@ -112,6 +112,7 @@ const FOCUS_AREAS = [
     },
     prefix_area('/css/cssom/'),
     prefix_area('/css/css-align/'),
+    prefix_area('/css/css-break/'),
     prefix_area('/css/css-flexbox/'),
     prefix_area('/css/css-grid/'),
     prefix_area('/css/css-position/'),
