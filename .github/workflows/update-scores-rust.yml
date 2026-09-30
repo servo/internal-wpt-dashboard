@@ -53,6 +53,10 @@ jobs:
             ./converted-wpt-report.json > ./servo-score-report.json
           xz -z ./servo-score-report.json -e
           cp ./servo-score-report.json.xz ./runs-2020/$CURRENT_DATE.xz
+      - name: Recalculate scores
+        run: |
+          mkdir -p site
+          wpt calc-scores --in ./runs-2020 --out ./site/scores.json --focus-areas ./focus-areas.json
       - uses: actions/upload-artifact@v4
         with:
           name: servo-score-report.json.xz
