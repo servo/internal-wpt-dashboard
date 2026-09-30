@@ -1,6 +1,7 @@
 [
   { "name": "All WPT tests", "areas": [""] },
   { "name": "/content-security-policy/", "areas": ["/content-security-policy"] },
+  { "name": "/credential-management/", "areas": ["/credential-management"] },
   { "name": "/css/", "areas": ["/css"] },
   { "name": "/css/CSS2/", "areas": ["/css/CSS2"] },
   { "name": "/css/CSS2/abspos/", "areas": ["/css/CSS2/abspos"] },
@@ -14,15 +15,19 @@
   { "name": "/css/CSS2/tables/ & /css/css-tables/", "areas": [ "/css/CSS2/tables", "/css/css-tables" ] },
   { "name": "/css/cssom/", "areas": ["/css/cssom"] },
   { "name": "/css/css-align/", "areas": ["/css/css-align"] },
+  { "name": "/css/css-break/", "areas": ["/css/css-break"] },
   { "name": "/css/css-flexbox/", "areas": ["/css/css-flexbox"] },
   { "name": "/css/css-grid/", "areas": ["/css/css-grid"] },
   { "name": "/css/css-position/", "areas": ["/css/css-position"] },
   { "name": "/css/css-sizing/", "areas": ["/css/css-sizing"] },
   { "name": "/css/css-text/", "areas": ["/css/css-text"] },
+  { "name": "/editing/", "areas": ["/editing"] },
   { "name": "/gamepad/", "areas": ["/gamepad"] },
+  { "name": "/IndexedDB/", "areas": ["/IndexedDB"] },
   { "name": "/shadow-dom/", "areas": ["/shadow-dom"] },
   { "name": "/streams/", "areas": ["/streams"] },
   { "name": "/trusted-types/", "areas": ["/trusted-types"] },
   { "name": "/WebCryptoAPI/", "areas": ["/WebCryptoAPI"] },
+  { "name": "/webdriver/tests/classic/", "areas": ["/webdriver/tests/classic"] },
   { "name": "/webxr/", "areas": ["/webxr"] }
 ]
