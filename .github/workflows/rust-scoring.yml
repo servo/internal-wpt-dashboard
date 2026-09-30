@@ -16,8 +16,10 @@ jobs:
           fetch-depth: 0
       - name: Install wpt cli
         run: cargo install wpt@0.1.1
-      - name: Recalc scores 
-        run: wpt calc-scores --in ./runs-2020 --out ./site/scores.json --focus-areas ./focus-areas.json
+      - name: Recalc scores
+        run: |
+          mkdir -p site
+          wpt calc-scores --in ./runs-2020 --out ./site/scores.json --focus-areas ./focus-areas.json
       - uses: actions/upload-artifact@v4
         with:
           name: scores.json
