@@ -47,7 +47,10 @@ jobs:
           CURRENT_DATE=$(date +"%Y-%m-%d")
           mkdir -p runs-2020
           wpt merge --in ./wpt-chunks-2020 --out ./merged-wpt-report.json
-          wpt convert --in ./merged-wpt-report.json --out ./servo-score-report.json --js-sort
+          wpt convert --in ./merged-wpt-report.json --out ./converted-wpt-report.json --js-sort
+          # Normalise "Version: Servo 0.6.0-5698249bd(-dirty)" to "0.6.0-5698249bd", or "Unknown"
+          jq -c '.run_info.browser_version |= ((strings | capture("^Version: Servo (?<v>[0-9.]+-[a-f0-9]+)?(-dirty)?$").v) // "Unknown")' \
+            ./converted-wpt-report.json > ./servo-score-report.json
           xz -z ./servo-score-report.json -e
           cp ./servo-score-report.json.xz ./runs-2020/$CURRENT_DATE.json.xz
       - uses: actions/upload-artifact@v4
