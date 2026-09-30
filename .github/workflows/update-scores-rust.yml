@@ -31,9 +31,12 @@ jobs:
       - wpt-for-layout-2020
     steps:
       - name: Checkout dashboard repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           ref: main
+          # A full clone is much faster than a shallow one for this repo: GitHub can send its
+          # existing packs as-is instead of building a new ~4.5 GiB pack for the shallow fetch
+          fetch-depth: 0
       - name: Download wpt results for layout 2020
         uses: actions/download-artifact@v4
         with:

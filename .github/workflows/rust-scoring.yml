@@ -9,7 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
+        with:
+          # A full clone is much faster than a shallow one for this repo: GitHub can send its
+          # existing packs as-is instead of building a new ~4.5 GiB pack for the shallow fetch
+          fetch-depth: 0
       - name: Install wpt cli
         run: cargo install wpt@0.1.1
       - name: Recalc scores 
