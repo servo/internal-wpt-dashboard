@@ -41,7 +41,7 @@ jobs:
           pattern: wpt-chunks-2020-*
           merge-multiple: true
       - name: Install wpt cli
-        run: cargo install wpt@0.0.11
+        run: cargo install wpt@0.1.1
       - name: Process new test results
         run: |
           CURRENT_DATE=$(date +"%Y-%m-%d")
