@@ -52,7 +52,7 @@ jobs:
           jq -c '.run_info.browser_version |= ((strings | capture("^Version: Servo (?<v>[0-9.]+-[a-f0-9]+)?(-dirty)?$").v) // "Unknown")' \
             ./converted-wpt-report.json > ./servo-score-report.json
           xz -z ./servo-score-report.json -e
-          cp ./servo-score-report.json.xz ./runs-2020/$CURRENT_DATE.json.xz
+          cp ./servo-score-report.json.xz ./runs-2020/$CURRENT_DATE.xz
       - uses: actions/upload-artifact@v4
         with:
           name: servo-score-report.json.xz
