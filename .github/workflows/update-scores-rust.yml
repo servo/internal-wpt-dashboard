@@ -1,0 +1,83 @@
+name: RUST Nightly job to update internal WPT dashboard
+
+on:
+  pull_request:
+  # Run an 2.5 hours after servo nightly job
+  schedule:
+    - cron: '0 8 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  RUST_BACKTRACE: 1
+  SHELL: /bin/bash
+
+jobs:
+  wpt-for-layout-2020:
+    uses: ./.github/workflows/run-wpt.yml
+    with:
+      layout-engine: 2020
+      artifact-name: wpt-chunks-2020
+
+  process-new-run:
+    name: Process all chunks and update metrics
+    runs-on: ubuntu-24.04
+    needs:
+      - wpt-for-layout-2020
+    steps:
+      - name: Checkout dashboard repo
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          # A full clone is much faster than a shallow one for this repo: GitHub can send its
+          # existing packs as-is instead of building a new ~4.5 GiB pack for the shallow fetch
+          fetch-depth: 0
+      - name: Download wpt results for layout 2020
+        uses: actions/download-artifact@v4
+        with:
+          path: wpt-chunks-2020
+          pattern: wpt-chunks-2020-*
+          merge-multiple: true
+      - name: Install wpt cli
+        run: cargo install wpt@0.1.1
+      - name: Process new test results
+        run: |
+          CURRENT_DATE=$(date +"%Y-%m-%d")
+          mkdir -p runs-2020
+          wpt merge --in ./wpt-chunks-2020 --out ./merged-wpt-report.json
+          wpt convert --in ./merged-wpt-report.json --out ./converted-wpt-report.json --js-sort
+          # Normalise "Version: Servo 0.6.0-5698249bd(-dirty)" to "0.6.0-5698249bd", or "Unknown"
+          jq -c '.run_info.browser_version |= ((strings | capture("^Version: Servo (?<v>[0-9.]+-[a-f0-9]+)?(-dirty)?$").v) // "Unknown")' \
+            ./converted-wpt-report.json > ./servo-score-report.json
+          xz -z ./servo-score-report.json -e
+          cp ./servo-score-report.json.xz ./runs-2020/$CURRENT_DATE.xz
+      - name: Recalculate scores
+        run: |
+          mkdir -p site
+          wpt calc-scores --in ./runs-2020 --out ./site/scores.json --focus-areas ./focus-areas.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: servo-score-report.json.xz
+          path: ./servo-score-report.json.xz
+          compression: 0
+
+      # git config user.name github-actions
+      # git config user.email github-actions@github.com
+      # git add runs-2020/${CURRENT_DATE}.xz
+      # git commit -m "Add runs for $CURRENT_DATE"
+      # git push
+
+      # - name: Setup Pages
+      #   uses: actions/configure-pages@v3
+      # - name: Upload Pages artifact
+      #   uses: actions/upload-pages-artifact@v3
+      #   with:
+      #     path: 'site'
+      # - name: Deploy to GitHub Pages
+      #   id: deployment
+      #   uses: actions/deploy-pages@v4
